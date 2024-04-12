@@ -1,10 +1,10 @@
-package com.consultorioapp.patientapi;
+package com.consultorioapp.pacientes_api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PatientApiApplicationTests {
+class PacientesApiApplicationTests {
 
 	@Test
 	void contextLoads() {
