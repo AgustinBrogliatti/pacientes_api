@@ -1,13 +1,13 @@
-package pacientes.javaapp;
+package com.consultorioapp.patientapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringbootAppApplication {
+public class PatientApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringbootAppApplication.class, args);
+		SpringApplication.run(PatientApiApplication.class, args);
 	}
 
 }

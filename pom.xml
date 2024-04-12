@@ -8,11 +8,11 @@
 		<version>3.2.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>pacientes.java-app</groupId>
-	<artifactId>springboot-app</artifactId>
+	<groupId>com.consultorio-app</groupId>
+	<artifactId>patient-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>springboot-app</name>
-	<description>Pacientes Projecto for Spring Boot</description>
+	<name>patient-api</name>
+	<description>Pacientes Spring Boot Project</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
