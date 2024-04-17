@@ -1,13 +1,26 @@
 package com.consultorioapp.pacientes_api.model;
 
-import lombok.Builder;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@Entity
+@Table(name = "patients_waiting")
 @Data
-@Builder
+@NoArgsConstructor
 public class WaitingLine {
+    @Id
+    @OneToOne
+    @JoinColumn(name = "patient", referencedColumnName="patient_id")
+    private Patient patient;
+
+    @ManyToOne
+    @JoinColumn(name = "room", referencedColumnName = "room_id")
+    private Room room;
+
+    @Transient
     private List<Patient> patients;
 
     public void assignPatient(Patient patient) {

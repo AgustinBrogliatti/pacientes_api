@@ -2,23 +2,33 @@ package com.consultorioapp.pacientes_api.model;
 
 import java.util.Date;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Data
-@Builder
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor
+@Entity
+@Table(name = "appointments")
 public class Appointment {
-    private Date schedule;
-    private Doctor dr;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "appointment_id")
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "user", referencedColumnName="user_id")
+    private Doctor doctor;
+
+    @ManyToOne
+    @JoinColumn(name = "patient", referencedColumnName="patient_id")
     private Patient patient;
+
+    private Date schedule;
     private String status;
 
-    public Appointment(Date schedule, Doctor dr, Patient patient) {
+    public Appointment(Date schedule, Doctor doctor, Patient patient) {
         this.schedule = schedule;
-        this.dr = dr;
+        this.doctor = doctor;
         this.patient = patient;
         this.status = "Pendiente";
     }

@@ -1,6 +1,5 @@
 package com.consultorioapp.pacientes_api.model;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,7 +25,7 @@ public class Secretary extends User {
         // Implementación para reprogramar una cita
     }
 
-    public void view_waiting_patients(ConsultingRoom room) {
+    public void view_waiting_patients(Room room) {
         // Implementación específica para los secretarios
     }
 }

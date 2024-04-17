@@ -1,16 +1,18 @@
 package com.consultorioapp.pacientes_api.model;
 import java.util.Date;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 
+@Entity
+@Table(name = "patients")
+@NoArgsConstructor
 @Data
-@Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Patient {
-    private int dni;
+    @Id
+    @Column(name = "patient_id", nullable = false)
+    private Long dni;
+
     private String name;
     private String lastname;
     private Date birthDate;
@@ -18,7 +20,7 @@ public class Patient {
     private String address;
     private String email;
 
-    public Patient(int dni, String name, String lastname, Date birthDate, String phoneNumber) {
+    public Patient(Long dni, String name, String lastname, Date birthDate, String phoneNumber) {
         this.dni = dni;
         this.name = name;
         this.lastname = lastname;

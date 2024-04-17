@@ -1,22 +1,30 @@
 package com.consultorioapp.pacientes_api.model;
 import java.util.List;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-
+@Entity
+@Table(name = "medical_records")
 @Data
-@Builder
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor
 public class MedicalRecord {
+    @Id
+    @OneToOne
+    @JoinColumn(name = "patient", referencedColumnName = "patient_id")
     private Patient patient;
+
+    @OneToOne
+    @JoinColumn(name = "user", referencedColumnName = "user_id")
     private Doctor doctor;
+    @Transient
     private List<String> healthInsurances;
     private String previousHistory;
     private String history;
+    @Transient
     private List<String> allergies;
+    @Transient
     private List<String> medicines;
 
     public MedicalRecord(Patient patient, Doctor doctor) {
