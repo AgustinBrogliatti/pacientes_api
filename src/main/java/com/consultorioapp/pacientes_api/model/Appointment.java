@@ -41,8 +41,24 @@ public class Appointment {
         this.status = AppointmentStatus.PENDING;
     }
 
-    public void rescheduleAppointment() {
-        // Implementación para reprogramar la cita
+    public void reschedule(Date newSchedule) {
+        this.schedule = newSchedule;
+    }
+
+    public void cancelAppointment() {
+        if (this.status == AppointmentStatus.PENDING) {
+            this.status = AppointmentStatus.CANCELLED;
+        } else {
+            throw new IllegalStateException("Cannot cancel appointment that is not pending.");
+        }
+    }
+
+    public void completeAppointment() {
+        if (this.status == AppointmentStatus.PENDING) {
+            this.status = AppointmentStatus.COMPLETED;
+        } else {
+            throw new IllegalStateException("Cannot complete appointment that is not pending.");
+        }
     }
 
     public enum AppointmentStatus {
