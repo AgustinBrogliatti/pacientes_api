@@ -1,21 +1,25 @@
 package com.consultorioapp.pacientes_api.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+import java.util.List;
+
 @Entity
-@NoArgsConstructor
 @Table(name = "rooms")
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "room_id")
     private Long id;
 
-    @Transient
-    private WaitingLine waitingLine;
+    @OneToMany
+    private List<Patient> patients;
 
     private String name;
 }

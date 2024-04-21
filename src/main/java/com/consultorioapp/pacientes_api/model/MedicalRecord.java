@@ -1,50 +1,59 @@
 package com.consultorioapp.pacientes_api.model;
-import java.util.List;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "medical_records")
-@Data
+
+@AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class MedicalRecord {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "record_id")
+    private Long id;
+
     @OneToOne
-    @JoinColumn(name = "patient", referencedColumnName = "patient_id")
+    @JoinColumn(name = "patient_id")
     private Patient patient;
 
     @OneToOne
-    @JoinColumn(name = "user", referencedColumnName = "user_id")
+    @JoinColumn(name = "doctor_id")
     private Doctor doctor;
-    @Transient
-    private List<String> healthInsurances;
+
+    @Column(name = "health_insurances", length = 100)
+    private String healthInsurances;
+
+    @Column(name = "previous_history", length = 2000)
     private String previousHistory;
-    private String history;
-    @Transient
-    private List<String> allergies;
-    @Transient
-    private List<String> medicines;
+
+    @OneToMany(mappedBy = "medicalRecord", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @Column(name = "allergies", length = 500)
+    private String allergies;
+
+    @Column(name = "medicines", length = 500)
+    private String medicines;
 
     public MedicalRecord(Patient patient, Doctor doctor) {
         this.patient = patient;
         this.doctor = doctor;
     }
 
-    public void addAllergy(String allergy) {
-        allergies.add(allergy);
+    public void addComment(Comment comment) {
+        comments.add(comment);
+        //comment.setMedicalRecord(this);
     }
 
-    public void deleteAllergy(String allergy) {
-        allergies.remove(allergy);
-    }
-
-    public void addMedicine(String medicine) {
-        medicines.add(medicine);
-    }
-
-    public void deleteMedicine(String medicine) {
-        medicines.remove(medicine);
+    public void removeComment(Comment comment) {
+        comments.remove(comment);
+        //comment.setMedicalRecord(null);
     }
 }

@@ -1,10 +1,14 @@
 package com.consultorioapp.pacientes_api.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Date;
 
+@Entity
+@DiscriminatorValue("Admin")
+
+@NoArgsConstructor
 @Getter
 @Setter
 public class Secretary extends User {
