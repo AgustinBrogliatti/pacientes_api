@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 public class Doctor extends User {
     @ManyToOne
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "room_id", referencedColumnName = "id")
     private Room room;
 
     public Doctor(String name, String lastname, String username, String password, Room room) {

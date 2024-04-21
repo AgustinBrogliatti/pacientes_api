@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "comments")
+@Table(name = "comment")
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,17 +15,17 @@ import java.util.Date;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "body", length = 2000)
+    @Column(name = "body", length = 2000, nullable = false)
     private String commentText;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "date")
+    @Column(name = "date", nullable = false)
     private Date commentDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "record_id")
+    @JoinColumn(name = "record_id", referencedColumnName = "id", nullable = false)
     private MedicalRecord medicalRecord;
 }

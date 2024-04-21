@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "appointments")
+@Table(name = "appointment")
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,23 +15,23 @@ import lombok.*;
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "appointment_id")
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "doctor_id")
+    @JoinColumn(name = "doctor_id", referencedColumnName = "id", nullable = false)
     private Doctor doctor;
 
     @ManyToOne
-    @JoinColumn(name = "patient_id")
+    @JoinColumn(name = "patient_id", referencedColumnName = "dni", nullable = false)
     private Patient patient;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "schedule")
+    @Column(name = "schedule", nullable = false)
     private Date schedule;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private AppointmentStatus status;
 
     public Appointment(Date schedule, Doctor doctor, Patient patient) {

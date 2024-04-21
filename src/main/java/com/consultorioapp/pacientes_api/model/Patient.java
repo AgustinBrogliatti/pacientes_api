@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "patients")
+@Table(name = "patient")
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,7 +13,7 @@ import lombok.*;
 @Setter
 public class Patient {
     @Id
-    @Column(name = "patient_id")
+    @Column(name = "dni")
     private Long dni;
 
     @Column(nullable = false, length = 50)

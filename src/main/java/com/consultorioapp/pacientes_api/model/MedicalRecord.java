@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "medical_records")
+@Table(name = "record")
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,15 +16,15 @@ import java.util.List;
 public class MedicalRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "record_id")
+    @Column(name = "id")
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "patient_id")
+    @JoinColumn(name = "patient_id", referencedColumnName = "dni", nullable = false)
     private Patient patient;
 
     @OneToOne
-    @JoinColumn(name = "doctor_id")
+    @JoinColumn(name = "doctor_id", referencedColumnName = "id")
     private Doctor doctor;
 
     @Column(name = "health_insurances", length = 100)
