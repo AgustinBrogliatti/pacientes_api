@@ -29,4 +29,21 @@ public class Room {
             uniqueConstraints = @UniqueConstraint(columnNames = {"room_id", "patient_dni"}))
     @OrderColumn(name = "priority")
     private List<Patient> patients;
+
+    public void assignPatient(Patient patient) {
+        this.patients.add(patient);
+    }
+
+    public void removePatient(Patient patient) {
+        this.patients.remove(patient);
+    }
+
+    public void reorderPatients(List<Patient> patientsOrder) {
+        this.patients.clear();
+        this.patients.addAll(patientsOrder);
+    }
+
+    public void empty() {
+        this.patients.clear();
+    }
 }
