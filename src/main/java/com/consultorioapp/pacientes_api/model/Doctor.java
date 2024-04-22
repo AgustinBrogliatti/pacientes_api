@@ -26,4 +26,12 @@ public class Doctor extends User {
     public void getRecords() {
         //TODO implementar service y repository
     }
+
+    public void addCommentToMedicalRecord(MedicalRecord medicalRecord, Comment comment) {
+        medicalRecord.addComment(comment);
+    }
+
+    public void removeCommentFromMedicalRecord(MedicalRecord medicalRecord, Comment comment) {
+        medicalRecord.removeComment(comment);
+    }
 }

@@ -19,11 +19,11 @@ public class Comment {
     private Long id;
 
     @Column(name = "body", length = 2000, nullable = false)
-    private String commentText;
+    private String body;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date", nullable = false)
-    private Date commentDate;
+    private Date date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "record_id", referencedColumnName = "id", nullable = false)
