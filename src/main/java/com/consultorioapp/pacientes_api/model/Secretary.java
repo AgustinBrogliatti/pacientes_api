@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.EnumSet;
+import java.util.List;
 
 @Entity
 @DiscriminatorValue("Admin")
@@ -17,19 +19,39 @@ public class Secretary extends User {
         super(name, lastname, username, password);
     }
 
-    public void createAppointment(Doctor doctor, Patient patient, Date date) {
-        // Implementación para crear una cita
+    public void createAppointment(Calendar calendar, Doctor doctor, Patient patient, Date date) {
+        Appointment newAppointment = new Appointment(date, doctor, patient);
+        calendar.createAppointment(newAppointment);
     }
 
-    public void cancel_appointment(Appointment appointment) {
-        // Implementación para cancelar una cita
+    public void cancelAppointment(Calendar calendar, Appointment appointment) {
+        appointment.cancelAppointment();
+        calendar.cancelAppointment(appointment);
     }
 
-    public void reschedule_appointment(Appointment appointment, Date new_date) {
-        // Implementación para reprogramar una cita
+    public void rescheduleAppointment(Appointment appointment, Date new_date) {
+        appointment.reschedule(new_date);
     }
 
-    public void view_waiting_patients(Room room) {
-        // Implementación específica para los secretarios
+    public void updateAppointmentStatus(Appointment appointment, AppointmentStatus newStatus) {
+        EnumSet<AppointmentStatus> validStatus = EnumSet.of(AppointmentStatus.PENDING, AppointmentStatus.COMPLETED, AppointmentStatus.CANCELLED);
+        if (!validStatus.contains(newStatus)) {
+            throw new IllegalArgumentException("Invalid appointment status");
+        }
+        if(newStatus != appointment.getStatus()) {
+            appointment.setStatus(newStatus);
+        }
     }
+
+    public MedicalRecord newMedicalRecord(Patient patient, Doctor doctor, String healthInsurances, String allergies, String medicines, String previousHistory) {
+        MedicalRecord medicalRecord = new MedicalRecord();
+        medicalRecord.setPatient(patient);
+        medicalRecord.setDoctor(doctor);
+        medicalRecord.setHealthInsurances(healthInsurances);
+        medicalRecord.setAllergies(allergies);
+        medicalRecord.setMedicines(medicines);
+        medicalRecord.setPreviousHistory(previousHistory);
+        return medicalRecord;
+    }
+
 }

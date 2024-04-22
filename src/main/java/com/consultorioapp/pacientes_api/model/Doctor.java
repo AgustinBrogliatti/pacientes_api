@@ -23,11 +23,7 @@ public class Doctor extends User {
         this.room = room;
     }
 
-    public void getLine() {
-        //TODO
-    }
-
     public void getRecords() {
-        //TODO
+        //TODO implementar service y repository
     }
 }

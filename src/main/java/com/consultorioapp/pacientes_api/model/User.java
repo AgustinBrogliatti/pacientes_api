@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "user")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -37,5 +39,9 @@ public abstract class User {
         this.lastname = lastname;
         this.username = username;
         this.password = password;
+    }
+
+    public List<Patient> getWaitingLine(Room room) {
+        return room.getPatients();
     }
 }
