@@ -60,11 +60,4 @@ public class Appointment {
             throw new IllegalStateException("Cannot complete appointment that is not pending.");
         }
     }
-
-    public enum AppointmentStatus {
-        PENDING,
-        COMPLETED,
-        CANCELLED,
-    }
 }
-
