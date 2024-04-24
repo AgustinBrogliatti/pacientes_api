@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING)
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,6 +22,9 @@ public abstract class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
+    @Column(name = "dtype", nullable = false)
+    private String dtype;
 
     @Column(nullable = false, length = 50)
     private String name;

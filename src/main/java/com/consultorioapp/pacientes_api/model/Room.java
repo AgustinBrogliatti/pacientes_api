@@ -18,7 +18,7 @@ public class Room {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name", length = 20, nullable = false)
+    @Column(name = "name", length = 20, nullable = false, unique = true)
     private String name;
 
     @OneToMany

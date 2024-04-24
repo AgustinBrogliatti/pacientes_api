@@ -58,4 +58,19 @@ public class UserServiceImpl implements IUserService {
         }
         return null;
     }
+
+    @Override
+    @Transactional
+    public User updateUserAccess(Long userId, String username, String password, String newPassword) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                user.setPassword(newPassword);
+                return userRepository.save(user);
+            }
+        }
+        return null;
+    }
 }
