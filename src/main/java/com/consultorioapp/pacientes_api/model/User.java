@@ -2,7 +2,9 @@ package com.consultorioapp.pacientes_api.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -13,6 +15,8 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +36,7 @@ public abstract class User {
     private String password;
 
     @Transient
-    private String room;
+    private Room room;
 
     public User(String name, String lastname, String username, String password) {
         this.name = name;

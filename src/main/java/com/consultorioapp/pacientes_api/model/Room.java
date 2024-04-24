@@ -30,6 +30,10 @@ public class Room {
     @OrderColumn(name = "priority")
     private List<Patient> patients;
 
+    public Room(String roomName) {
+        this.name = roomName;
+    }
+
     public void assignPatient(Patient patient) {
         this.patients.add(patient);
     }

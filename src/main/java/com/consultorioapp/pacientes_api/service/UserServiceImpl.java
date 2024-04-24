@@ -1,14 +1,16 @@
 package com.consultorioapp.pacientes_api.service;
 
 import com.consultorioapp.pacientes_api.model.Doctor;
-import com.consultorioapp.pacientes_api.model.Room;
 import com.consultorioapp.pacientes_api.model.Secretary;
+import com.consultorioapp.pacientes_api.model.User;
+import com.consultorioapp.pacientes_api.model.Room;
 import com.consultorioapp.pacientes_api.repository.RoomRepository;
 import com.consultorioapp.pacientes_api.repository.UserRepository;
-import jakarta.persistence.Transient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -34,5 +36,26 @@ public class UserServiceImpl implements IUserService {
     public Secretary createSecretary(String name, String lastname, String username, String password) {
         Secretary newSecretary = new Secretary(name, lastname, username, password);
         return userRepository.save(newSecretary);
+    }
+
+    @Override
+    @Transactional
+    public Doctor getDoctorById(Long doctorId) {
+        Optional<User> doctorOptional = userRepository.findById(doctorId);
+        return (Doctor) doctorOptional.orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public Doctor updateDoctorRoom(Long doctorId, Long roomId) {
+        Optional<User> doctorOptional = userRepository.findById(doctorId);
+        Optional<Room> roomOptional = roomRepository.findById(roomId);
+        if (doctorOptional.isPresent() && roomOptional.isPresent()) {
+            Doctor doctor = (Doctor) doctorOptional.get();
+            Room room = roomOptional.get();
+            doctor.setRoom(room);
+            return userRepository.save(doctor);
+        }
+        return null;
     }
 }
