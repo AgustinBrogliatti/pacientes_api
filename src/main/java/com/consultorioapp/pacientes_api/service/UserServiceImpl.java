@@ -1,9 +1,6 @@
 package com.consultorioapp.pacientes_api.service;
 
-import com.consultorioapp.pacientes_api.model.Doctor;
-import com.consultorioapp.pacientes_api.model.Secretary;
-import com.consultorioapp.pacientes_api.model.User;
-import com.consultorioapp.pacientes_api.model.Room;
+import com.consultorioapp.pacientes_api.model.*;
 import com.consultorioapp.pacientes_api.repository.RoomRepository;
 import com.consultorioapp.pacientes_api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,33 +20,42 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Transactional
-    public Doctor createDoctor(String name, String lastname, String username, String password, Long roomId) {
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new IllegalArgumentException("El roomId proporcionado no es válido"));
-
-        Doctor newDoctor = new Doctor(name, lastname, username, password, room);
-        return userRepository.save(newDoctor);
+    public User createUser(String name, String lastname, String username, String password, String userType) {
+        return createUser(name, lastname, username, password, userType, null);
     }
 
     @Override
     @Transactional
-    public Secretary createSecretary(String name, String lastname, String username, String password) {
-        Secretary newSecretary = new Secretary(name, lastname, username, password);
-        return userRepository.save(newSecretary);
+    public User createUser(String name, String lastname, String username, String password, String userType, Long roomId) {
+        if (userRepository.existsByUsername(username)) {
+            throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+        }
+
+        if (userType.equals(UserType.DOCTOR)) {
+            Room room = roomRepository.findById(roomId)
+                    .orElseThrow(() -> new IllegalArgumentException("El roomId proporcionado no es válido"));
+            Doctor newDoctor = new Doctor(name, lastname, username, password, room);
+            return userRepository.save(newDoctor);
+        } else if (userType.equals(UserType.SECRETARY)) {
+            Secretary newSecretary = new Secretary(name, lastname, username, password);
+            return userRepository.save(newSecretary);
+        } else {
+            throw new IllegalArgumentException("Tipo de usuario no válido");
+        }
     }
 
     @Override
     @Transactional
-    public Doctor getDoctorById(Long doctorId) {
+    public User getUserById(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        return userOptional.orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public Doctor updateDoctorRoom(Long doctorId, Long newRoomId) {
         Optional<User> doctorOptional = userRepository.findById(doctorId);
-        return (Doctor) doctorOptional.orElse(null);
-    }
-
-    @Override
-    @Transactional
-    public Doctor updateDoctorRoom(Long doctorId, Long roomId) {
-        Optional<User> doctorOptional = userRepository.findById(doctorId);
-        Optional<Room> roomOptional = roomRepository.findById(roomId);
+        Optional<Room> roomOptional = roomRepository.findById(newRoomId);
         if (doctorOptional.isPresent() && roomOptional.isPresent()) {
             Doctor doctor = (Doctor) doctorOptional.get();
             Room room = roomOptional.get();

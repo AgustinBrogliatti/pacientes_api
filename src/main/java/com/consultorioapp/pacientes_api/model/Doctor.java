@@ -7,9 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@DiscriminatorValue("Dr")
+@DiscriminatorValue(UserType.DOCTOR)
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter

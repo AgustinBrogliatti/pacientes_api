@@ -8,7 +8,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 @Entity
-@DiscriminatorValue("Admin")
+@DiscriminatorValue(UserType.SECRETARY)
 
 @NoArgsConstructor
 @Getter
