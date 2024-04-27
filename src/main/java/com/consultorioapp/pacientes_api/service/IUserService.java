@@ -8,7 +8,7 @@ public interface IUserService {
     User createUser(String name, String lastname, String username, String password, String userType, Long roomId);
     User createUser(String name, String lastname, String username, String password, String userType);
     User getUserById(Long userId);
-    User updateUserAccess(Long userId, String username, String password, String newPassword);
+    User updateUserAccess(String username, String password, String newPassword);
     Doctor updateDoctorRoom(Long doctorId, Long roomId);
 
 }

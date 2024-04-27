@@ -27,7 +27,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     @Transactional
     public User createUser(String name, String lastname, String username, String password, String userType, Long roomId) {
-        if (userRepository.existsByUsername(username)) {
+        if (userRepository.findByUsername(username).isPresent()) {
             throw new IllegalArgumentException("El nombre de usuario ya está en uso");
         }
 
@@ -45,7 +45,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public User getUserById(Long userId) {
         Optional<User> userOptional = userRepository.findById(userId);
         return userOptional.orElse(null);
@@ -56,27 +56,37 @@ public class UserServiceImpl implements IUserService {
     public Doctor updateDoctorRoom(Long doctorId, Long newRoomId) {
         Optional<User> doctorOptional = userRepository.findById(doctorId);
         Optional<Room> roomOptional = roomRepository.findById(newRoomId);
-        if (doctorOptional.isPresent() && roomOptional.isPresent()) {
-            Doctor doctor = (Doctor) doctorOptional.get();
-            Room room = roomOptional.get();
-            doctor.setRoom(room);
-            return userRepository.save(doctor);
+
+        if (doctorOptional.isEmpty()) {
+            throw new IllegalArgumentException("Doctor con id " + doctorId + " no encontrado");
         }
-        return null;
+        if (roomOptional.isEmpty()) {
+            throw new IllegalArgumentException("Habitación con id " + newRoomId + " no encontrada");
+        }
+
+        Doctor doctor = (Doctor) doctorOptional.get();
+        Room room = roomOptional.get();
+        doctor.setRoom(room);
+        return userRepository.save(doctor);
     }
 
     @Override
     @Transactional
-    public User updateUserAccess(Long userId, String username, String password, String newPassword) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
+    public User updateUserAccess(String username, String password, String newPassword) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
 
-            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                user.setPassword(newPassword);
-                return userRepository.save(user);
-            }
+        if (userOptional.isEmpty()) {
+            throw new IllegalArgumentException("Usuario no encontrado. Username: " + username);
         }
-        return null;
+
+        User user = userOptional.get();
+
+        if (!user.getUsername().equals(username) || !user.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Nombre de usuario o contraseña incorrectos");
+        }
+
+        user.setPassword(newPassword);
+        return userRepository.save(user);
     }
+
 }
