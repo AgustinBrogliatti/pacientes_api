@@ -1,8 +1,8 @@
-package com.consultorioapp.pacientes_api.service;
+package com.consultorioapp.pacientes_api.services;
 
 import com.consultorioapp.pacientes_api.model.*;
-import com.consultorioapp.pacientes_api.repository.RoomRepository;
-import com.consultorioapp.pacientes_api.repository.UserRepository;
+import com.consultorioapp.pacientes_api.repositories.RoomRepository;
+import com.consultorioapp.pacientes_api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

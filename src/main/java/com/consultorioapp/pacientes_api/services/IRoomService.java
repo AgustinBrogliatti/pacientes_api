@@ -1,4 +1,4 @@
-package com.consultorioapp.pacientes_api.service;
+package com.consultorioapp.pacientes_api.services;
 
 import com.consultorioapp.pacientes_api.model.Room;
 

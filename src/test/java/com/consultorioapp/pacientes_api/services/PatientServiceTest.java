@@ -1,7 +1,7 @@
-package com.consultorioapp.pacientes_api.service;
+package com.consultorioapp.pacientes_api.services;
 
 import com.consultorioapp.pacientes_api.model.Patient;
-import com.consultorioapp.pacientes_api.repository.PatientRepository;
+import com.consultorioapp.pacientes_api.repositories.PatientRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

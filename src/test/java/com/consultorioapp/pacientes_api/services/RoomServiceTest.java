@@ -1,7 +1,7 @@
-package com.consultorioapp.pacientes_api.service;
+package com.consultorioapp.pacientes_api.services;
 
 import com.consultorioapp.pacientes_api.model.Room;
-import com.consultorioapp.pacientes_api.repository.RoomRepository;
+import com.consultorioapp.pacientes_api.repositories.RoomRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
