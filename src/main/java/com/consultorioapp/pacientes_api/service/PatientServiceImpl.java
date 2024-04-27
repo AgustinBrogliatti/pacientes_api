@@ -33,6 +33,20 @@ public class PatientServiceImpl implements IPatientService {
         return patientRepository.save(patient);
     }
 
+    @Override
+    @Transactional
+    public Patient createPatient(Patient patientData) {
+        Optional<Patient> existingPatient = patientRepository.findById(patientData.getDni());
+        if (existingPatient.isPresent()) {
+            throw new IllegalArgumentException("Ya existe un paciente con el DNI proporcionado");
+        }
+
+        if (patientData.getEmail() != null && patientRepository.existsByEmail(patientData.getEmail())) {
+            throw new IllegalArgumentException("El email proporcionado ya está asociado a otro paciente");
+        }
+
+        return patientRepository.save(patientData);
+    }
 
     @Override
     @Transactional
@@ -40,42 +54,23 @@ public class PatientServiceImpl implements IPatientService {
         Patient patient = patientRepository.findById(dni)
                 .orElseThrow(() -> new IllegalArgumentException("Paciente no encontrado"));
 
-        try {
-            Field[] fields = Patient.class.getDeclaredFields();
-            for (Field field : fields) {
-                String fieldName = field.getName();
-                Object newValue = null;
-
-                switch (fieldName) {
-                    case "name":
-                        newValue = name;
-                        break;
-                    case "lastname":
-                        newValue = lastname;
-                        break;
-                    case "birthDate":
-                        newValue = birthDate;
-                        break;
-                    case "phoneNumber":
-                        newValue = phoneNumber;
-                        break;
-                    case "address":
-                        newValue = address;
-                        break;
-                    case "email":
-                        newValue = email;
-                        break;
-                    default:
-                        continue;
-                }
-
-                if (newValue != null && !newValue.equals(field.get(patient))) {
-                    field.setAccessible(true);
-                    field.set(patient, newValue);
-                }
-            }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Error al actualizar el paciente: " + e.getMessage());
+        if (name != null) {
+            patient.setName(name);
+        }
+        if (lastname != null) {
+            patient.setLastname(lastname);
+        }
+        if (birthDate != null) {
+            patient.setBirthDate(birthDate);
+        }
+        if (phoneNumber != null) {
+            patient.setPhoneNumber(phoneNumber);
+        }
+        if (address != null) {
+            patient.setAddress(address);
+        }
+        if (email != null) {
+            patient.setEmail(email);
         }
 
         return patientRepository.save(patient);
@@ -88,11 +83,4 @@ public class PatientServiceImpl implements IPatientService {
                 .orElseThrow(() -> new IllegalArgumentException("Paciente no encontrado con el ID proporcionado"));
     }
 
-    @Override
-    @Transactional
-    public void deletePatient(Long dni) {
-        Patient patient = patientRepository.findById(dni)
-                .orElseThrow(() -> new IllegalArgumentException("Paciente no encontrado"));
-        patientRepository.delete(patient);
-    }
 }

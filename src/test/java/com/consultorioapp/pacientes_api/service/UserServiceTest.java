@@ -32,7 +32,7 @@ public class UserServiceTest {
 
     @Test
     public void testCreateUserSecretary() {
-        roomService.createRoom("Sarmiento");
+        roomService.createRoom("UserRoom");
         Secretary newUser = (Secretary) userService.createUser("Secretaria", "Ficticia", "user-secretaria", "password", UserType.SECRETARY);
 
         Secretary savedSecretary = (Secretary) userRepository.findById(newUser.getId()).orElse(null);
