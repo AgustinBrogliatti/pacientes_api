@@ -10,4 +10,6 @@ public interface IRoomService {
     Room getRoomById(Long roomId);
 
     List<Room> getAllRooms();
+
+    Room deleteRoomById(Long roomId);
 }

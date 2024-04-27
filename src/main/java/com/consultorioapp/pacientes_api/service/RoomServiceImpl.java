@@ -42,4 +42,15 @@ public class RoomServiceImpl implements IRoomService{
         return rooms;
     }
 
+    public Room deleteRoomById(Long roomId) {
+        Optional<Room> roomOptional = roomRepository.findById(roomId);
+        if (roomOptional.isEmpty()) {
+            throw new IllegalArgumentException("Sala no encontrada. ID: " + roomId);
+        }
+
+        Room room = roomOptional.get();
+        roomRepository.delete(room);
+        return room;
+    }
+
 }

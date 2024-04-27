@@ -68,4 +68,24 @@ public class RoomServiceTest {
         Assert.assertEquals("Room 2", rooms.get(1).getName());
         Assert.assertEquals("Room 3", rooms.get(2).getName());
     }
+
+    @Test
+    public void testDeleteRoomById() {
+        Room room = roomService.createRoom("Sala Test");
+
+        Room deletedRoom = roomService.deleteRoomById(room.getId());
+
+        Assert.assertNotNull(deletedRoom);
+        Assert.assertEquals(room.getId(), deletedRoom.getId());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteRoomByIdWithInvalidId() {
+        try {
+            roomService.deleteRoomById(999L);
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("Sala no encontrada. ID: 999", e.getMessage());
+            throw e;
+        }
+    }
 }
