@@ -1,9 +1,7 @@
 package com.consultorioapp.pacientes_api.service;
 
 import com.consultorioapp.pacientes_api.model.Doctor;
-import com.consultorioapp.pacientes_api.model.Secretary;
 import com.consultorioapp.pacientes_api.model.User;
-import com.consultorioapp.pacientes_api.model.UserType;
 
 
 public interface IUserService {

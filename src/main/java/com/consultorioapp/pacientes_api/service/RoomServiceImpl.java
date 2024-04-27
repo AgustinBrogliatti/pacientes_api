@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +37,9 @@ public class RoomServiceImpl implements IRoomService{
     @Override
     @Transactional
     public List<Room> getAllRooms(){
-        return roomRepository.findAll();
+        List<Room> rooms = new ArrayList<>();
+        roomRepository.findAll().forEach(rooms::add);
+        return rooms;
     }
 
 }
