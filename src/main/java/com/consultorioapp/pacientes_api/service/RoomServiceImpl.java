@@ -2,7 +2,7 @@ package com.consultorioapp.pacientes_api.service;
 
 import com.consultorioapp.pacientes_api.model.Room;
 import com.consultorioapp.pacientes_api.repository.RoomRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -28,14 +28,14 @@ public class RoomServiceImpl implements IRoomService{
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Room getRoomById(Long roomId) {
         Optional<Room> roomOptional = roomRepository.findById(roomId);
         return roomOptional.orElse(null);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Room> getAllRooms(){
         List<Room> rooms = new ArrayList<>();
         roomRepository.findAll().forEach(rooms::add);

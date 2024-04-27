@@ -104,7 +104,7 @@ public class UserServiceTest {
     public void testUpdateDoctorRoom() {
         Room room = roomService.createRoom("Sala 1");
         Room newRoom = roomService.createRoom("Sala 2");
-        Doctor doctor = (Doctor) userService.createUser("John", "Doe", "user-update-romm", "password", UserType.DOCTOR, room.getId());
+        Doctor doctor = (Doctor) userService.createUser("John", "Doe", "user-update-room", "password", UserType.DOCTOR, room.getId());
 
         Doctor updatedDoctor = userService.updateDoctorRoom(doctor.getId(), newRoom.getId());
 

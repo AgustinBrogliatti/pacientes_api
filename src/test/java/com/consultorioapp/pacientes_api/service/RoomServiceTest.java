@@ -29,7 +29,6 @@ public class RoomServiceTest {
         Room createdRoom = roomService.createRoom(roomName);
         Assert.assertNotNull(createdRoom);
         Assert.assertEquals(roomName, createdRoom.getName());
-//        roomRepository.deleteById(createdRoom.getId());
     }
 
     @Test
@@ -54,7 +53,6 @@ public class RoomServiceTest {
         Room retrievedRoom = roomService.getRoomById(createdRoom.getId());
         Assert.assertNotNull(retrievedRoom);
         Assert.assertEquals(roomName, retrievedRoom.getName());
-//        roomRepository.deleteById(createdRoom.getId());
     }
 
     @Test
@@ -69,6 +67,5 @@ public class RoomServiceTest {
         Assert.assertEquals("Room 1", rooms.get(0).getName());
         Assert.assertEquals("Room 2", rooms.get(1).getName());
         Assert.assertEquals("Room 3", rooms.get(2).getName());
-//        roomRepository.deleteAll();
     }
 }
