@@ -10,5 +10,6 @@ public interface IUserService {
     User getUserById(Long userId);
     User updateUserAccess(String username, String password, String newPassword);
     Doctor updateDoctorRoom(Long doctorId, Long roomId);
+    User deleteUser(String username, String password);
 
 }

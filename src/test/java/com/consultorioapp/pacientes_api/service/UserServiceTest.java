@@ -165,4 +165,39 @@ public class UserServiceTest {
         }
     }
 
+    @Test
+    public void testDeleteUser() {
+        User user = userService.createUser("John", "Doe", "user-to-delete", "password", UserType.DOCTOR, 1L);
+        User deletedUser = userService.deleteUser(user.getUsername(), user.getPassword());
+
+        Assert.assertNotNull(deletedUser);
+        Assert.assertEquals(user.getId(), deletedUser.getId());
+        Assert.assertEquals(user.getUsername(), deletedUser.getUsername());
+        Assert.assertEquals(user.getName(), deletedUser.getName());
+        Assert.assertEquals(user.getLastname(), deletedUser.getLastname());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteUserWithInvalidUsername() {
+        try {
+            userService.deleteUser("invalid-username", "password");
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("Usuario no encontrado. Username: invalid-username", e.getMessage());
+            throw e;
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteUserWithInvalidPassword() {
+        User user = userService.createUser("John", "Doe", "user-to-delete", "password", UserType.DOCTOR, 1L);
+
+        try {
+            userService.deleteUser(user.getUsername(), "invalid-password");
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("Nombre de usuario o contraseña incorrectos", e.getMessage());
+            throw e;
+        }
+    }
+
+
 }

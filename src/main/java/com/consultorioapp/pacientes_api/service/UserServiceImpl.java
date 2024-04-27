@@ -89,4 +89,22 @@ public class UserServiceImpl implements IUserService {
         return userRepository.save(user);
     }
 
+    @Override
+    @Transactional
+    public User deleteUser(String username, String password) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isEmpty()) {
+            throw new IllegalArgumentException("Usuario no encontrado. Username: " + username);
+        }
+
+        User user = userOptional.get();
+
+        if (!user.getUsername().equals(username) || !user.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Nombre de usuario o contraseña incorrectos");
+        }
+
+        userRepository.delete(user);
+        return user;
+    }
+
 }
