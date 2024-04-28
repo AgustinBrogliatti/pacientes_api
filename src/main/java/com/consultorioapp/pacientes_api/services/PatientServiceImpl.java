@@ -14,6 +14,7 @@ public class PatientServiceImpl implements IPatientService {
 
     @Autowired
     private PatientRepository patientRepository;
+
     @Override
     @Transactional
     public Patient createPatient(Long dni, String name, String lastname, Date birthDate, String phoneNumber, String address, String email) {
@@ -75,9 +76,10 @@ public class PatientServiceImpl implements IPatientService {
 
     @Override
     @Transactional
-    public Patient findPatientById(Long id) {
-        return patientRepository.findById(id)
+    public Patient findPatientById(Long dni) {
+        return patientRepository.findById(dni)
                 .orElseThrow(() -> new IllegalArgumentException("Paciente no encontrado con el ID proporcionado"));
     }
+
 
 }

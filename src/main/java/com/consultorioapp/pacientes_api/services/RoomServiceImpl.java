@@ -4,8 +4,8 @@ import com.consultorioapp.pacientes_api.model.Room;
 import com.consultorioapp.pacientes_api.repositories.RoomRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.ArrayList;
 import java.util.List;

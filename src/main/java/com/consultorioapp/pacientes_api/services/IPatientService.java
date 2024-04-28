@@ -11,5 +11,5 @@ public interface IPatientService {
 
     Patient updatePatient(Long dni, String name, String lastname, Date birthDate, String phoneNumber, String address, String email);
 
-    Patient findPatientById(Long id);
+    Patient findPatientById(Long dni);
 }
