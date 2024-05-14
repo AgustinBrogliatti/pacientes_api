@@ -80,15 +80,17 @@ public class PatientServiceTest {
         templatePatient.setDni(33333333L);
         Patient existingPatient = patientService.createPatient(templatePatient);
 
-        Patient updatedPatient = patientService.updatePatient(
-                existingPatient.getDni(),
-                "Juanito",
-                "Perez",
-                new Date(631152000000L),
-                "987654321",
-                "Avenida 456",
-                "juanito@example.com"
-        );
+        Patient newPatientData = new Patient();
+        newPatientData.setDni(existingPatient.getDni());
+        newPatientData.setName("Juanito");
+        newPatientData.setLastname("Perez");
+        newPatientData.setBirthDate(new Date(631152000000L));
+        newPatientData.setPhoneNumber("987654321");
+        newPatientData.setAddress("Avenida 456");
+        newPatientData.setEmail("juanito@example.com");
+
+
+        Patient updatedPatient = patientService.updatePatient(existingPatient.getDni(), newPatientData);
 
         Assert.assertNotNull(updatedPatient);
         Assert.assertEquals(existingPatient.getDni(), updatedPatient.getDni());
@@ -100,10 +102,11 @@ public class PatientServiceTest {
         Assert.assertEquals("juanito@example.com", updatedPatient.getEmail());
     }
 
+
     @Test
     public void testUpdatePatient_NotFound() {
         try {
-            patientService.updatePatient(999999999L, "Nombre", "Apellido", new Date(), "123456789", "Dirección", "email@example.com");
+            patientService.updatePatient(999999999L, templatePatient);
             Assert.fail();
         } catch (IllegalArgumentException e) {
             Assert.assertEquals("Paciente no encontrado", e.getMessage());

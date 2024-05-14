@@ -48,28 +48,16 @@ public class PatientServiceImpl implements IPatientService {
 
     @Override
     @Transactional
-    public Patient updatePatient(Long dni, String name, String lastname, Date birthDate, String phoneNumber, String address, String email) {
+    public Patient updatePatient(Long dni, Patient newPatientData) {
         Patient patient = patientRepository.findById(dni)
                 .orElseThrow(() -> new IllegalArgumentException("Paciente no encontrado"));
 
-        if (name != null) {
-            patient.setName(name);
-        }
-        if (lastname != null) {
-            patient.setLastname(lastname);
-        }
-        if (birthDate != null) {
-            patient.setBirthDate(birthDate);
-        }
-        if (phoneNumber != null) {
-            patient.setPhoneNumber(phoneNumber);
-        }
-        if (address != null) {
-            patient.setAddress(address);
-        }
-        if (email != null) {
-            patient.setEmail(email);
-        }
+        patient.setName(newPatientData.getName());
+        patient.setLastname(newPatientData.getLastname());
+        patient.setBirthDate(newPatientData.getBirthDate());
+        patient.setPhoneNumber(newPatientData.getPhoneNumber());
+        patient.setAddress(newPatientData.getAddress());
+        patient.setEmail(newPatientData.getEmail());
 
         return patientRepository.save(patient);
     }
