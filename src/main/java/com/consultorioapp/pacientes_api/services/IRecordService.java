@@ -11,7 +11,7 @@ public interface IRecordService {
     MedicalRecord getRecordById(Long id);
     MedicalRecordDetailsDto getRecordDetails(Long id);
     List<MedicalRecordDto> getRecords();
-//    List<MedicalRecordDto> getRecordByDni(String String);
+    List<MedicalRecordDto> getRecordsByDni(String String);
 //    List<MedicalRecordDto> getRecordsByLastName(String lastname);
 //    List<MedicalRecordDto> getRecordsByFullName(String fullName);
 

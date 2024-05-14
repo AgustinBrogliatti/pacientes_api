@@ -25,13 +25,13 @@ public interface RecordRepository extends CrudRepository<MedicalRecord, Long> {
             " WHERE m.id = :recordId")
     MedicalRecordDetailsDto findDetails(@Param("recordId") Long recordId);
 
-//    @Query("SELECT new com.consultorioapp.pacientes_api.Dto.MedicalRecordDto(m.id, p.dni, p.lastname, p.name, m.healthInsurances, p.phoneNumber, d.name)" +
-//            " FROM MedicalRecord m" +
-//            " JOIN m.patient p" +
-//            " JOIN m.doctor d" +
-//            " WHERE STR(p.dni) LIKE :dni%")
-//    List<MedicalRecordDto> findByDniStartsWith(String dni);
-//
+   @Query("SELECT new com.consultorioapp.pacientes_api.Dto.MedicalRecordDto(m.id, p.dni, p.lastname, p.name, m.healthInsurances, p.phoneNumber, d.name)" +
+            " FROM MedicalRecord m" +
+            " JOIN m.patient p" +
+            " JOIN m.doctor d" +
+            " WHERE STR(p.dni) LIKE :dni%")
+    List<MedicalRecordDto> findByDniStartsWith(String dni);
+
 //    @Query("SELECT new com.consultorioapp.pacientes_api.Dto.MedicalRecordDto(m.id, p.dni, p.lastname, p.name, m.healthInsurances, p.phoneNumber, d.name)" +
 //            " FROM MedicalRecord m" +
 //            " JOIN m.patient p" +

@@ -69,18 +69,18 @@ public class RecordServiceImpl implements IRecordService {
         return records;
     }
 
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<MedicalRecordDto> getRecordByDni(String dni) {
-//        if (dni == null) {
-//            throw new IllegalArgumentException("El paciente o DNI del paciente no puede ser nulo.");
-//        }
-//        List<MedicalRecordDto> records = recordRepository.findByDniStartsWith(dni);
-//        if (records.isEmpty()) {
-//            throw new NoSuchElementException("No se encontraron registros médicos para el DNI: " + dni);
-//        }
-//        return records;
-//    }
+    @Override
+    @Transactional(readOnly = true)
+    public List<MedicalRecordDto> getRecordsByDni(String dni) {
+        if (dni == null) {
+            throw new IllegalArgumentException("El paciente o DNI del paciente no puede ser nulo.");
+        }
+        List<MedicalRecordDto> records = recordRepository.findByDniStartsWith(dni);
+        if (records.isEmpty()) {
+            throw new NoSuchElementException("No se encontraron registros médicos para el DNI: " + dni);
+        }
+        return records;
+    }
 
 //    @Override
 //    @Transactional(readOnly = true)
