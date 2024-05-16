@@ -28,9 +28,9 @@ public class RecordServiceTest {
 
     @Autowired
     private RoomServiceImpl roomServiceImpl;
+
     @Autowired
     private RecordServiceImpl recordServiceImpl;
-
     public Patient CreatePatientService(Patient patient) {
         return patientServiceImpl.createPatient(patient);
     }
@@ -39,12 +39,13 @@ public class RecordServiceTest {
         return (Doctor) userServiceImpl.createUser(docName, "Moreno", docName, "password", UserType.DOCTOR, roomId);
     }
 
-    public Room CreateRoom() {
-        return roomServiceImpl.createRoom("Rivadavia");
+    public Room CreateRoom(String name) {
+        return roomServiceImpl.createRoom(name);
     }
 
     public MedicalRecord CreateRecord(Long dni, String email, String docName) {
-        Doctor newDoctor = CreateDoctor(1L, docName);
+        Room newRoom = CreateRoom(docName + "-room");
+        Doctor newDoctor = CreateDoctor(newRoom.getId(), docName);
         templatePatient.setDni(dni);
         templatePatient.setEmail(email);
         Patient patientData = templatePatient;
@@ -71,7 +72,6 @@ public class RecordServiceTest {
 
     @Test
     public void testCreateMedicalRecord() {
-        Room newRoom = CreateRoom();
         MedicalRecord newRecord  = CreateRecord(1111L, "email1","user-doc1");
         MedicalRecord recoveredRecord = recordServiceImpl.getRecordById(newRecord.getId());
 
@@ -91,6 +91,7 @@ public class RecordServiceTest {
 
         Assert.assertNotNull(retrievedRecord);
         Assert.assertEquals(newRecord.getId(), retrievedRecord.getId());
+        Assert.assertEquals(newRecord.getDoctor().getRoom().getName(), retrievedRecord.getDoctor().getRoom().getName());
     }
 
     @Test
@@ -115,32 +116,13 @@ public class RecordServiceTest {
     }
 
     @Test
-    public void testGetRecords() {
-        List<MedicalRecordDto> records = recordServiceImpl.getRecords();
-
-        Assert.assertNotNull(records);
-
-        for (int i = 0; i < records.size(); i++) {
-            MedicalRecordDto record = records.get(i);
-            Assert.assertEquals("user-doc" + (i+1), record.getDoctorName());
-            Assert.assertEquals(Long.valueOf(i+1), record.getId());
-            Assert.assertEquals(Long.valueOf((i+1)*1111L), record.getPatientDni());
-        }
-
-        for (MedicalRecordDto recordDto   : records) {
-            System.out.println(recordDto.getDoctorName());
-            System.out.println(recordDto.getPatientDni());
-        }
-    }
-
-    @Test
-    public void testGetRecordsByDni() {
-        String dni = "123";
+    public void testGetRecordsByDniStartWith() {
+        String startDni = "123";
         CreateRecord(1234444L, "email4","user-doc4");
         CreateRecord(1235555L, "email5","user-doc5");
         CreateRecord(1236666L, "email6","user-doc6");
 
-        List<MedicalRecordDto> records = recordServiceImpl.getRecordsByDni(dni);
+        List<MedicalRecordDto> records = recordServiceImpl.getRecordsByDni(startDni);
 
         Assert.assertNotNull(records);
         Assert.assertEquals(3, records.size());
@@ -165,6 +147,72 @@ public class RecordServiceTest {
         Assert.assertTrue(found1234444);
         Assert.assertTrue(found1235555);
         Assert.assertTrue(found1236666);
+    }
+
+    @Test
+    public void testGetRecordsByDni() {
+        CreateRecord(777777L, "email7","user-doc7");
+        String dni = "777777";
+        List<MedicalRecordDto> records = recordServiceImpl.getRecordsByDni(dni);
+
+        Assert.assertNotNull(records);
+        Assert.assertEquals(1, records.size());
+
+        boolean foundRecord = false;
+
+        for (MedicalRecordDto record : records) {
+            if (record.getPatientDni() == 777777L) {
+                foundRecord = true;
+                break;
+            }
+        }
+
+        Assert.assertTrue(foundRecord);
+    }
+
+    @Test
+    public void testGetRecordsByLastnameStartWith() {
+        String startLastname = "Gia";
+        templatePatient.setLastname("Giacomini");
+        CreateRecord(8888L, "email10","user-doc10");
+        templatePatient.setLastname("Giacomo");
+        CreateRecord(9999L, "email15","user-doc15");
+
+        List<MedicalRecordDto> records = recordServiceImpl.getRecordsByLastName(startLastname);
+
+        Assert.assertNotNull(records);
+        Assert.assertEquals(2, records.size());
+
+        boolean foundGiacomini = false;
+        boolean foundGiacomo = false;
+
+        for (MedicalRecordDto record : records) {
+            String lastnamePrefix = String.valueOf(record.getPatientLastname()).substring(0, 3);
+            Assert.assertEquals("Gia", lastnamePrefix);
+
+            if (record.getPatientLastname().equals("Giacomini")) {
+                foundGiacomini = true;
+            }
+            if (record.getPatientLastname().equals("Giacomo")) {
+                foundGiacomo = true;
+            }
+        }
+
+        Assert.assertTrue(foundGiacomini);
+        Assert.assertTrue(foundGiacomo);
+    }
+
+    @Test
+    public void testGetRecords() {
+        List<MedicalRecordDto> records = recordServiceImpl.getRecords();
+        Assert.assertNotNull(records);
+
+        for (int i = 0; i < records.size(); i++) {
+            MedicalRecordDto record = records.get(i);
+            Assert.assertEquals("user-doc" + (i+1), record.getDoctorName());
+            Assert.assertEquals(Long.valueOf(i+1), record.getId());
+            Assert.assertEquals(Long.valueOf((i+1)*1111L), record.getPatientDni());
+        }
     }
 
 }

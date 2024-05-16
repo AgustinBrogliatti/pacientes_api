@@ -12,7 +12,7 @@ public interface IRecordService {
     MedicalRecordDetailsDto getRecordDetails(Long id);
     List<MedicalRecordDto> getRecords();
     List<MedicalRecordDto> getRecordsByDni(String String);
-//    List<MedicalRecordDto> getRecordsByLastName(String lastname);
+    List<MedicalRecordDto> getRecordsByLastName(String lastname);
 //    List<MedicalRecordDto> getRecordsByFullName(String fullName);
 
 //    Patient updatePatient(Patient patient);

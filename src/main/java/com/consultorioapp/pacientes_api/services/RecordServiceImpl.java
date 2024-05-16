@@ -73,7 +73,7 @@ public class RecordServiceImpl implements IRecordService {
     @Transactional(readOnly = true)
     public List<MedicalRecordDto> getRecordsByDni(String dni) {
         if (dni == null) {
-            throw new IllegalArgumentException("El paciente o DNI del paciente no puede ser nulo.");
+            throw new IllegalArgumentException("El DNI del paciente no puede ser nulo.");
         }
         List<MedicalRecordDto> records = recordRepository.findByDniStartsWith(dni);
         if (records.isEmpty()) {
@@ -82,18 +82,18 @@ public class RecordServiceImpl implements IRecordService {
         return records;
     }
 
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<MedicalRecordDto> getRecordsByLastName(String lastname) {
-//        if (lastname == null) {
-//            throw new IllegalArgumentException("El paciente o el apellido del paciente no puede ser nulo.");
-//        }
-//        List<MedicalRecordDto> records = recordRepository.findByPatientLastnameStartsWith(lastname);
-//        if (records.isEmpty()) {
-//            throw new NoSuchElementException("No se encontraron registros médicos para el apellido: " + lastname);
-//        }
-//        return records;
-//    }
+    @Override
+    @Transactional(readOnly = true)
+    public List<MedicalRecordDto> getRecordsByLastName(String lastname) {
+        if (lastname == null) {
+            throw new IllegalArgumentException("El apellido ingresado no puede ser nulo.");
+        }
+        List<MedicalRecordDto> records = recordRepository.findByLastName(lastname);
+        if (records.isEmpty()) {
+            throw new NoSuchElementException("No se encontraron registros médicos para el apellido: " + lastname);
+        }
+        return records;
+    }
 //
 //    @Override
 //    @Transactional(readOnly = true)
