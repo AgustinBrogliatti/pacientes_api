@@ -94,18 +94,17 @@ public class RecordServiceImpl implements IRecordService {
         }
         return records;
     }
-//
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<MedicalRecordDto> getRecordsByFullName(String fullName) {
-//        if (fullName == null) {
-//            throw new IllegalArgumentException("No se encontro un fullname.");
-//        }
-//        List<MedicalRecordDto> records = recordRepository.findByPatientFullNameStartsWith(fullName);
-//        if (records.isEmpty()) {
-//            throw new NoSuchElementException("No se encontraron registros médicos para el nombre completo: " + fullName);
-//        }
-//        return records;
-//    }
+    @Override
+    @Transactional(readOnly = true)
+    public List<MedicalRecordDto> getRecordsByFullName(String fullName) {
+        if (fullName == null) {
+            throw new IllegalArgumentException("El fullname ingresado no puede ser nulo.");
+        }
+        List<MedicalRecordDto> records = recordRepository.findByPatientFullNameStartsWith(fullName);
+        if (records.isEmpty()) {
+            throw new NoSuchElementException("No se encontraron registros médicos para el nombre completo: " + fullName);
+        }
+        return records;
+    }
 
 }

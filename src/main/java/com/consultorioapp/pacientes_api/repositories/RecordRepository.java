@@ -39,12 +39,12 @@ public interface RecordRepository extends CrudRepository<MedicalRecord, Long> {
             " WHERE LOWER(p.lastname) LIKE LOWER(:lastname) || '%'")
     List<MedicalRecordDto> findByLastName(@Param("lastname") String lastname);
 
-//    @Query("SELECT new com.consultorioapp.pacientes_api.Dto.MedicalRecordDto(m.id, p.dni, p.lastname, p.name, m.healthInsurances, p.phoneNumber, d.name)" +
-//            " FROM MedicalRecord m" +
-//            " JOIN m.patient p" +
-//            " JOIN m.doctor d" +
-//            " WHERE CONCAT(p.lastname, ', ', p.name) LIKE :fullname%")
-//    List<MedicalRecordDto> findByPatientFullNameStartsWith(String fullName);
+    @Query("SELECT new com.consultorioapp.pacientes_api.Dto.MedicalRecordDto(m.id, p.dni, p.lastname, p.name, m.healthInsurances, p.phoneNumber, d.name)" +
+            " FROM MedicalRecord m" +
+            " JOIN m.patient p" +
+            " JOIN m.doctor d" +
+            " WHERE CONCAT(p.lastname, ', ', p.name) LIKE LOWER(:fullName) || '%'")
+    List<MedicalRecordDto> findByPatientFullNameStartsWith(@Param("fullName") String fullName);
 
     List<MedicalRecord> findByPatientDni(Long dni);
     MedicalRecord deleteByPatientDni(Long dni);

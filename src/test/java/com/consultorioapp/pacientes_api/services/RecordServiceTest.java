@@ -203,6 +203,34 @@ public class RecordServiceTest {
     }
 
     @Test
+    public void testGetRecordsByFullnameStartWith() {
+        templatePatient.setLastname("Brogliatti Briones");
+        templatePatient.setName("Oreste Agustin");
+        CreateRecord(1212L, "email12","user-doc12");
+
+        String search = "Brogliatti Briones, Ore";
+        List<MedicalRecordDto> records = recordServiceImpl.getRecordsByFullName(search);
+
+        Assert.assertNotNull(records);
+        Assert.assertEquals(1, records.size());
+
+        boolean foundAgustin = false;
+
+        for (MedicalRecordDto record : records) {
+            String fullnamePrefix = String.valueOf(record.getPatientLastname()).substring(0, 10);
+            Assert.assertEquals("Brogliatti", fullnamePrefix);
+
+            String getFullNameReceived = record.getPatientLastname() + ", " + record.getPatientName();
+
+            if (getFullNameReceived.equals("Brogliatti Briones, Oreste Agustin")) {
+                foundAgustin = true;
+            }
+        }
+
+        Assert.assertTrue(foundAgustin);
+    }
+
+    @Test
     public void testGetRecords() {
         List<MedicalRecordDto> records = recordServiceImpl.getRecords();
         Assert.assertNotNull(records);
