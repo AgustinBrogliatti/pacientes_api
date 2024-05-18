@@ -2,11 +2,14 @@ package com.consultorioapp.pacientes_api.services;
 
 import com.consultorioapp.pacientes_api.Dto.MedicalRecordDetailsDto;
 import com.consultorioapp.pacientes_api.Dto.MedicalRecordDto;
+import com.consultorioapp.pacientes_api.Dto.MedicalRecordInfoDto;
+import com.consultorioapp.pacientes_api.model.Doctor;
 import com.consultorioapp.pacientes_api.model.MedicalRecord;
 import com.consultorioapp.pacientes_api.model.Patient;
 import com.consultorioapp.pacientes_api.repositories.PatientRepository;
 import com.consultorioapp.pacientes_api.repositories.RecordRepository;
 import com.consultorioapp.pacientes_api.repositories.UserRepository;
+
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -106,5 +109,45 @@ public class RecordServiceImpl implements IRecordService {
         }
         return records;
     }
+
+    @Override
+    @Transactional
+    public Patient updatePatient(Long recordId, Patient patient) {
+        Optional<MedicalRecord> optionalMedicalRecord = recordRepository.findById(recordId);
+        if (optionalMedicalRecord.isPresent()) {
+            MedicalRecord medicalRecord = optionalMedicalRecord.get();
+            medicalRecord.setPatient(patient);
+            recordRepository.save(medicalRecord);
+            return patient;
+        } else {
+            throw new NoSuchElementException("Registro médico no encontrado id: " + recordId);
+        }
+    }
+
+    @Override
+    @Transactional
+    public MedicalRecord updateRecordInfo(MedicalRecordInfoDto newRecordData) {
+        Optional<MedicalRecord> optionalMedicalRecord = recordRepository.findById(newRecordData.getId());
+        if (optionalMedicalRecord.isPresent()) {
+            MedicalRecord existingRecord = optionalMedicalRecord.get();
+
+            existingRecord.setHealthInsurances(newRecordData.getHealthInsurances());
+            existingRecord.setPreviousHistory(newRecordData.getPreviousHistory());
+            existingRecord.setAllergies(newRecordData.getAllergies());
+            existingRecord.setMedicines(newRecordData.getMedicines());
+
+            if (newRecordData.getDoctorId() != null) {
+                Doctor newDoctor = (Doctor) userRepository.findById(Long.parseLong(newRecordData.getDoctorId()))
+                        .orElseThrow(() -> new NoSuchElementException("Doctor no encontrado ID: " + newRecordData.getDoctorId()));
+                existingRecord.setDoctor(newDoctor);
+            }
+
+            return recordRepository.save(existingRecord);
+        } else {
+            throw new NoSuchElementException("Medical Record not found with ID: " + newRecordData.getId());
+        }
+    }
+
+
 
 }

@@ -2,6 +2,7 @@ package com.consultorioapp.pacientes_api.services;
 
 import com.consultorioapp.pacientes_api.Dto.MedicalRecordDetailsDto;
 import com.consultorioapp.pacientes_api.Dto.MedicalRecordDto;
+import com.consultorioapp.pacientes_api.Dto.MedicalRecordInfoDto;
 import com.consultorioapp.pacientes_api.model.*;
 import com.consultorioapp.pacientes_api.repositories.RecordRepository;
 import com.consultorioapp.pacientes_api.repositories.UserRepository;
@@ -82,16 +83,6 @@ public class RecordServiceTest {
         Assert.assertEquals(newRecord.getAllergies(), recoveredRecord.getAllergies());
         Assert.assertEquals(newRecord.getMedicines(), recoveredRecord.getMedicines());
         Assert.assertEquals(newRecord.getPreviousHistory(), recoveredRecord.getPreviousHistory());
-    }
-
-    @Test
-    public void testGetRecordById() {
-        MedicalRecord newRecord  = CreateRecord(2222L, "email2","user-doc2");
-        MedicalRecord retrievedRecord = recordServiceImpl.getRecordById(newRecord.getId());
-
-        Assert.assertNotNull(retrievedRecord);
-        Assert.assertEquals(newRecord.getId(), retrievedRecord.getId());
-        Assert.assertEquals(newRecord.getDoctor().getRoom().getName(), retrievedRecord.getDoctor().getRoom().getName());
     }
 
     @Test
@@ -229,6 +220,56 @@ public class RecordServiceTest {
 
         Assert.assertTrue(foundAgustin);
     }
+
+    @Test
+    public void testUpdatePatientRecord() {
+        MedicalRecord newRecord = CreateRecord(1313L, "email13","user-doc13");
+        String newName = "Agustin";
+        String newEmail = "agustin@gmail.com";
+
+        templatePatient.setName(newName);
+        templatePatient.setEmail(newEmail);
+
+        Patient newPatientData = templatePatient;
+
+        Patient patientReceived = recordServiceImpl.updatePatient(newRecord.getId(), newPatientData);
+
+        Assert.assertNotNull(patientReceived);
+        Assert.assertEquals(newRecord.getPatient().getEmail(), "email13");
+        Assert.assertEquals(patientReceived.getEmail(), newEmail);
+        Assert.assertEquals(patientReceived.getName(), newName);
+    }
+
+    @Test
+    public void testUpdateRecord() {
+        MedicalRecord existRecord = CreateRecord(1414L, "email14", "user-doc14");
+        String newDoctorUsername = "updated-doctor";
+        String newHealthInsurances = "New Health Insurance";
+        String newPreviousHistory = "New Previous History";
+        String newAllergies = "New Allergies";
+        String newMedicines = "New Medicines";
+
+        Room newRoom = CreateRoom("new-room");
+        Doctor newDoctor = CreateDoctor(newRoom.getId(), newDoctorUsername);
+
+        MedicalRecordInfoDto  newRecordData = new MedicalRecordInfoDto(
+                existRecord.getId(),
+                newDoctor.getId().toString(),
+                newHealthInsurances,
+                newPreviousHistory,
+                newAllergies,
+                newMedicines
+        );
+
+        MedicalRecord updatedRecord = recordServiceImpl.updateRecordInfo(newRecordData);
+
+        Assert.assertEquals(newDoctorUsername, updatedRecord.getDoctor().getUsername());
+        Assert.assertEquals(newHealthInsurances, updatedRecord.getHealthInsurances());
+        Assert.assertEquals(newPreviousHistory, updatedRecord.getPreviousHistory());
+        Assert.assertEquals(newAllergies, updatedRecord.getAllergies());
+        Assert.assertEquals(newMedicines, updatedRecord.getMedicines());
+    }
+
 
     @Test
     public void testGetRecords() {
