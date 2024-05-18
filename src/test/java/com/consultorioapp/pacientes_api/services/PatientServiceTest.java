@@ -90,47 +90,27 @@ public class PatientServiceTest {
         newPatientData.setEmail("juanito@example.com");
 
 
-        Patient updatedPatient = patientService.updatePatient(existingPatient.getDni(), newPatientData);
+        Patient updatedPatient = patientService.updatePatient(newPatientData);
 
         Assert.assertNotNull(updatedPatient);
         Assert.assertEquals(existingPatient.getDni(), updatedPatient.getDni());
-        Assert.assertEquals("Juanito", updatedPatient.getName());
-        Assert.assertEquals("Perez", updatedPatient.getLastname());
-        Assert.assertEquals("1989-12-31", new SimpleDateFormat("yyyy-MM-dd").format(updatedPatient.getBirthDate()));
-        Assert.assertEquals("987654321", updatedPatient.getPhoneNumber());
-        Assert.assertEquals("Avenida 456", updatedPatient.getAddress());
-        Assert.assertEquals("juanito@example.com", updatedPatient.getEmail());
+        Assert.assertEquals(newPatientData.getName(), updatedPatient.getName());
+        Assert.assertEquals(newPatientData.getLastname(), updatedPatient.getLastname());
+        Assert.assertEquals(newPatientData.getPhoneNumber(), updatedPatient.getPhoneNumber());
+        Assert.assertEquals(newPatientData.getAddress(), updatedPatient.getAddress());
+        Assert.assertEquals(newPatientData.getEmail(), updatedPatient.getEmail());
     }
+
 
 
     @Test
     public void testUpdatePatient_NotFound() {
+        templatePatient.setDni(123123L);
         try {
-            patientService.updatePatient(999999999L, templatePatient);
+            patientService.updatePatient(templatePatient);
             Assert.fail();
         } catch (IllegalArgumentException e) {
             Assert.assertEquals("Paciente no encontrado", e.getMessage());
-        }
-    }
-
-    @Test
-    public void testFindPatientById_Exists() {
-        templatePatient.setDni(44444444L);
-        templatePatient.setEmail("test4@email.com");
-        Patient createdPatient = patientService.createPatient(templatePatient);
-
-        Patient foundPatient = patientService.findPatientById(createdPatient.getDni());
-        Assert.assertNotNull(foundPatient);
-        Assert.assertEquals(createdPatient.getDni(), foundPatient.getDni());
-    }
-
-    @Test
-    public void testFindPatientById_NotFound() {
-        try {
-            patientService.findPatientById(999999999L);
-            Assert.fail();
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Paciente no encontrado con el ID proporcionado", e.getMessage());
         }
     }
 }

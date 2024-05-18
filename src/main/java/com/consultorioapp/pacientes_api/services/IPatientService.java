@@ -5,8 +5,6 @@ import com.consultorioapp.pacientes_api.model.Patient;
 import java.util.Date;
 
 public interface IPatientService {
-    Patient createPatient(Long dni, String name, String lastname, Date birthDate, String phoneNumber, String address, String email);
-    Patient createPatient(Patient patientData);
-    Patient updatePatient(Long dni, Patient newPatientData);
-    Patient findPatientById(Long dni);
+    Patient createPatient(Patient patient);
+    Patient updatePatient(Patient newPatientData);
 }

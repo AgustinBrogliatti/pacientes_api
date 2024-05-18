@@ -35,14 +35,6 @@ public class Patient {
     @Column(unique = true, length = 50)
     private String email;
 
-    public Patient(Long dni, String name, String lastname, Date birthDate, String phoneNumber) {
-        this.dni = dni;
-        this.name = name;
-        this.lastname = lastname;
-        this.birthDate = birthDate;
-        this.phoneNumber = phoneNumber;
-    }
-
     public MedicalRecord getMedicalRecord() {
         //TODO
         return null;
