@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -47,15 +48,6 @@ public class RoomServiceTest {
     }
 
     @Test
-    public void testGetRoomById() {
-        String roomName = "Rivadavia";
-        Room createdRoom = roomService.createRoom(roomName);
-        Room retrievedRoom = roomService.getRoomById(createdRoom.getId());
-        Assert.assertNotNull(retrievedRoom);
-        Assert.assertEquals(roomName, retrievedRoom.getName());
-    }
-
-    @Test
     public void testGetAllRooms() {
         roomService.createRoom("Room 1");
         roomService.createRoom("Room 2");
@@ -72,11 +64,9 @@ public class RoomServiceTest {
     @Test
     public void testDeleteRoomById() {
         Room room = roomService.createRoom("Sala Test");
+        boolean isDeleted = roomService.deleteRoomById(room.getId());
 
-        Room deletedRoom = roomService.deleteRoomById(room.getId());
-
-        Assert.assertNotNull(deletedRoom);
-        Assert.assertEquals(room.getId(), deletedRoom.getId());
+        Assert.assertTrue(isDeleted);
     }
 
     @Test(expected = IllegalArgumentException.class)

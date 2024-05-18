@@ -26,14 +26,6 @@ public class RoomServiceImpl implements IRoomService{
             throw new IllegalArgumentException("El nombre de la sala ya está en uso");
         }
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Room getRoomById(Long roomId) {
-        Optional<Room> roomOptional = roomRepository.findById(roomId);
-        return roomOptional.orElse(null);
-    }
-
     @Override
     @Transactional(readOnly = true)
     public List<Room> getAllRooms(){
@@ -42,15 +34,20 @@ public class RoomServiceImpl implements IRoomService{
         return rooms;
     }
 
-    public Room deleteRoomById(Long roomId) {
+    public boolean deleteRoomById(Long roomId) {
         Optional<Room> roomOptional = roomRepository.findById(roomId);
         if (roomOptional.isEmpty()) {
             throw new IllegalArgumentException("Sala no encontrada. ID: " + roomId);
         }
 
         Room room = roomOptional.get();
-        roomRepository.delete(room);
-        return room;
+
+        try {
+            roomRepository.delete(room);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }
