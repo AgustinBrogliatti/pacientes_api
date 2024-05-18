@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.print.Doc;
 import java.util.Optional;
 
 @Service
@@ -20,35 +21,24 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Transactional
-    public User createUser(String name, String lastname, String username, String password, String userType) {
-        return createUser(name, lastname, username, password, userType, null);
+    public Doctor createDoctor(Doctor doctor) {
+        if (userRepository.findByUsername(doctor.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+        }
+
+        Room room = roomRepository.findById(doctor.getRoom().getId())
+                .orElseThrow(() -> new IllegalArgumentException("El roomId proporcionado no es válido"));
+        return userRepository.save(doctor);
     }
 
     @Override
     @Transactional
-    public User createUser(String name, String lastname, String username, String password, String userType, Long roomId) {
-        if (userRepository.findByUsername(username).isPresent()) {
+    public Secretary createSecretary(Secretary secretary) {
+        if (userRepository.findByUsername(secretary.getUsername()).isPresent()) {
             throw new IllegalArgumentException("El nombre de usuario ya está en uso");
         }
 
-        if (userType.equals(UserType.DOCTOR)) {
-            Room room = roomRepository.findById(roomId)
-                    .orElseThrow(() -> new IllegalArgumentException("El roomId proporcionado no es válido"));
-            Doctor newDoctor = new Doctor(name, lastname, username, password, room);
-            return userRepository.save(newDoctor);
-        } else if (userType.equals(UserType.SECRETARY)) {
-            Secretary newSecretary = new Secretary(name, lastname, username, password);
-            return userRepository.save(newSecretary);
-        } else {
-            throw new IllegalArgumentException("Tipo de usuario no válido");
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public User getUserById(Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        return userOptional.orElse(null);
+        return userRepository.save(secretary);
     }
 
     @Override
@@ -91,20 +81,24 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Transactional
-    public User deleteUser(String username, String password) {
-        Optional<User> userOptional = userRepository.findByUsername(username);
+    public boolean deleteUser(User user) {
+        Optional<User> userOptional = userRepository.findByUsername(user.getUsername());
         if (userOptional.isEmpty()) {
-            throw new IllegalArgumentException("Usuario no encontrado. Username: " + username);
+            throw new IllegalArgumentException("Usuario no encontrado. Username: " + user.getUsername());
         }
 
-        User user = userOptional.get();
+        User userReceived = userOptional.get();
 
-        if (!user.getUsername().equals(username) || !user.getPassword().equals(password)) {
+        if (!user.getUsername().equals(userReceived.getUsername()) || !user.getPassword().equals(userReceived.getPassword())) {
             throw new IllegalArgumentException("Nombre de usuario o contraseña incorrectos");
         }
 
-        userRepository.delete(user);
-        return user;
+        try {
+            userRepository.delete(user);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

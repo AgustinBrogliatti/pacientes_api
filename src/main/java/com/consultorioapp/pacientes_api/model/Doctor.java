@@ -22,10 +22,6 @@ public class Doctor extends User {
         this.room = room;
     }
 
-    public void getRecords() {
-        //TODO implementar service y repository
-    }
-
     public void addCommentToMedicalRecord(MedicalRecord medicalRecord, Comment comment) {
         medicalRecord.addComment(comment);
     }

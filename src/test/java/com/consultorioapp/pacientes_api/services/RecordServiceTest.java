@@ -36,8 +36,10 @@ public class RecordServiceTest {
         return patientServiceImpl.createPatient(patient);
     }
 
-    public Doctor CreateDoctor(Long roomId, String docName) {
-        return (Doctor) userServiceImpl.createUser(docName, "Moreno", docName, "password", UserType.DOCTOR, roomId);
+    public Doctor CreateDoctor(String docName) {
+        Room newRoom = CreateRoom(docName + "-room");
+        Doctor newDoctor = new Doctor(docName, "Moreno", docName, "password", newRoom);
+        return userServiceImpl.createDoctor(newDoctor);
     }
 
     public Room CreateRoom(String name) {
@@ -45,8 +47,7 @@ public class RecordServiceTest {
     }
 
     public MedicalRecord CreateRecord(Long dni, String email, String docName) {
-        Room newRoom = CreateRoom(docName + "-room");
-        Doctor newDoctor = CreateDoctor(newRoom.getId(), docName);
+        Doctor newDoctor = CreateDoctor(docName);
         templatePatient.setDni(dni);
         templatePatient.setEmail(email);
         Patient patientData = templatePatient;
@@ -250,7 +251,7 @@ public class RecordServiceTest {
         String newMedicines = "New Medicines";
 
         Room newRoom = CreateRoom("new-room");
-        Doctor newDoctor = CreateDoctor(newRoom.getId(), newDoctorUsername);
+        Doctor newDoctor = CreateDoctor(newDoctorUsername);
 
         MedicalRecordInfoDto  newRecordData = new MedicalRecordInfoDto(
                 existRecord.getId(),

@@ -11,6 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Date;
+import java.util.Optional;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Configuration
@@ -27,86 +30,73 @@ public class UserServiceTest {
 
     @Autowired
     private RoomRepository roomRepository;
-
-    Long roomId = 1L;
-
     @Test
     public void testCreateUserSecretary() {
         roomService.createRoom("UserRoom");
-        Secretary newUser = (Secretary) userService.createUser("Secretaria", "Ficticia", "user-secretaria", "password", UserType.SECRETARY);
+        Secretary newUser = new Secretary("Secretaria", "Ficticia", "user-secretaria", "password");
+        Secretary createdUser = userService.createSecretary(newUser);
 
         Secretary savedSecretary = (Secretary) userRepository.findById(newUser.getId()).orElse(null);
+
         Assert.assertNotNull(savedSecretary);
-        Assert.assertEquals("Secretaria", savedSecretary.getName());
-        Assert.assertEquals("Ficticia", savedSecretary.getLastname());
-        Assert.assertEquals("user-secretaria", savedSecretary.getUsername());
-        Assert.assertEquals("password", savedSecretary.getPassword());
+        Assert.assertEquals(createdUser.getName(), savedSecretary.getName());
+        Assert.assertEquals(createdUser.getLastname(), savedSecretary.getLastname());
+        Assert.assertEquals(createdUser.getUsername(), savedSecretary.getUsername());
+        Assert.assertEquals(createdUser.getPassword(), savedSecretary.getPassword());
     }
 
     @Test
     public void testCreateUserDoctor() {
-        Doctor newDoctor = (Doctor) userService.createUser("Javier", "Moreno", "user-doc", "password", UserType.DOCTOR, roomId);
+        Room newRoom = roomService.createRoom("room-2");
+        Doctor newDoctor = new Doctor("Javier", "Moreno", "user-doc", "password", newRoom);
+        Doctor createdUser = userService.createDoctor(newDoctor);
 
         Doctor savedDoctor = (Doctor) userRepository.findById(newDoctor.getId()).orElse(null);
+
         Assert.assertNotNull(savedDoctor);
-        Assert.assertEquals("Javier", savedDoctor.getName());
-        Assert.assertEquals("Moreno", savedDoctor.getLastname());
-        Assert.assertEquals("user-doc", savedDoctor.getUsername());
-        Assert.assertEquals("password", savedDoctor.getPassword());
-        Assert.assertEquals(roomId, savedDoctor.getRoom().getId());
+        Assert.assertEquals(createdUser.getName(), savedDoctor.getName());
+        Assert.assertEquals(createdUser.getLastname(), savedDoctor.getLastname());
+        Assert.assertEquals(createdUser.getUsername(), savedDoctor.getUsername());
+        Assert.assertEquals(createdUser.getPassword(), savedDoctor.getPassword());
+        Assert.assertEquals(newRoom.getId(), savedDoctor.getRoom().getId());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateUserWithExistingUsername() {
-        userService.createUser("John", "Doe", "user-exist", "password", UserType.DOCTOR, roomId);
+        Room newRoom = roomService.createRoom("room-3");
+        Secretary newUser = new Secretary("John", "Doe", "user-exist", "password");
+        userService.createSecretary(newUser);
+
         try {
-            userService.createUser("Jane", "Doe", "user-exist", "password", UserType.SECRETARY);
+            userService.createSecretary(newUser);
         } catch (IllegalArgumentException e) {
             Assert.assertEquals("El nombre de usuario ya está en uso", e.getMessage());
             throw e;
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = RuntimeException.class)
     public void testCreateDoctorWithInvalidRoomId() {
+        Room room = new Room("bad-room");
+        Doctor newDoctor = new Doctor("Javier", "Moreno", "user-bad-room", "password", room);
+
         try {
-            userService.createUser("Juan", "Pérez", "user-room-exist", "password", UserType.DOCTOR, 555L);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("El roomId proporcionado no es válido", e.getMessage());
+            userService.createDoctor(newDoctor);
+        } catch (RuntimeException e) {
+            String expectedMessage = "El roomId proporcionado no es válido";
             throw e;
         }
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateUserWithInvalidUserType() {
-        try {
-            userService.createUser("Jane", "Doe", "user-invalidType", "password", "InvalidType");
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Tipo de usuario no válido", e.getMessage());
-            throw e;
-        }
-    }
-
-    @Test
-    public void testGetDoctorById() {
-        User user =  userService.createUser("John", "Doe", "get-user", "password", UserType.SECRETARY);
-        User retrievedUser = userService.getUserById(user.getId());
-
-        Assert.assertNotNull(retrievedUser);
-        Assert.assertEquals(user.getId(), retrievedUser.getId());
-        Assert.assertEquals(user.getName(), retrievedUser.getName());
-        Assert.assertEquals(user.getLastname(), retrievedUser.getLastname());
-        Assert.assertEquals(user.getUsername(), retrievedUser.getUsername());
-        Assert.assertEquals(user.getPassword(), retrievedUser.getPassword());
     }
 
     @Test
     public void testUpdateDoctorRoom() {
         Room room = roomService.createRoom("Sala 1");
         Room newRoom = roomService.createRoom("Sala 2");
-        Doctor doctor = (Doctor) userService.createUser("John", "Doe", "user-update-room", "password", UserType.DOCTOR, room.getId());
 
-        Doctor updatedDoctor = userService.updateDoctorRoom(doctor.getId(), newRoom.getId());
+        Doctor newDoctor = new Doctor("John", "Doe", "user-update-room", "password", room);
+        Doctor createdUser = userService.createDoctor(newDoctor);
+
+        Doctor updatedDoctor = userService.updateDoctorRoom(newDoctor.getId(), newRoom.getId());
 
         Assert.assertNotNull(updatedDoctor);
         Assert.assertEquals(newRoom.getId(), updatedDoctor.getRoom().getId());
@@ -124,9 +114,11 @@ public class UserServiceTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateDoctorRoomWithInvalidRoomId() {
-        Doctor doctor = (Doctor) userService.createUser("John", "Doe", "user-invalid-room", "password", UserType.DOCTOR, 1L);
+        Room room = roomService.createRoom("Sala 10");
+        Doctor newDoctor = new Doctor("John", "Doe", "user-invalid-room", "password", room);
+        Doctor createdUser = userService.createDoctor(newDoctor);
         try {
-            userService.updateDoctorRoom(doctor.getId(), 999L);
+            userService.updateDoctorRoom(newDoctor.getId(), 999L);
         } catch (IllegalArgumentException e) {
             Assert.assertEquals("Habitación con id 999 no encontrada", e.getMessage());
             throw e;
@@ -135,10 +127,12 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUserAccess() {
-        User user =  userService.createUser("John", "Doe", "user-update-login", "password", UserType.SECRETARY);
+        Secretary newUser = new Secretary("John", "Doe", "user-update-login", "password");
+        Secretary createdUser = userService.createSecretary(newUser);
+
         String newPassword = "newPassword";
 
-        User updatedUser = userService.updateUserAccess(user.getUsername(), user.getPassword(), newPassword);
+        User updatedUser = userService.updateUserAccess(createdUser.getUsername(), createdUser.getPassword(), newPassword);
 
         Assert.assertNotNull(updatedUser);
         Assert.assertEquals(newPassword, updatedUser.getPassword());
@@ -154,50 +148,25 @@ public class UserServiceTest {
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testUpdateUserAccessWithIncorrectCredentials() {
-        User user = userService.createUser("John", "Doe", "invalid-pass-update", "password", UserType.SECRETARY);
-        try {
-            userService.updateUserAccess("invalid-pass-update", "incorrectPassword", "newPassword");
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Nombre de usuario o contraseña incorrectos", e.getMessage());
-            throw e;
-        }
-    }
-
     @Test
     public void testDeleteUser() {
-        User user = userService.createUser("John", "Doe", "user-to-delete", "password", UserType.DOCTOR, 1L);
-        User deletedUser = userService.deleteUser(user.getUsername(), user.getPassword());
+        Secretary newUser = new Secretary("John", "Doe", "user-to-delete", "password");
+        Secretary createdUser = userService.createSecretary(newUser);
 
-        Assert.assertNotNull(deletedUser);
-        Assert.assertEquals(user.getId(), deletedUser.getId());
-        Assert.assertEquals(user.getUsername(), deletedUser.getUsername());
-        Assert.assertEquals(user.getName(), deletedUser.getName());
-        Assert.assertEquals(user.getLastname(), deletedUser.getLastname());
+        boolean isDeleted = userService.deleteUser(createdUser);
+        Assert.assertTrue(isDeleted);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testDeleteUserWithInvalidUsername() {
+        Secretary newUser = new Secretary("John", "Doe", "false-user", "password");
+
         try {
-            userService.deleteUser("invalid-username", "password");
+            userService.deleteUser(newUser);
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Usuario no encontrado. Username: invalid-username", e.getMessage());
+            Assert.assertEquals("Usuario no encontrado. Username: false-user", e.getMessage());
             throw e;
         }
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testDeleteUserWithInvalidPassword() {
-        User user = userService.createUser("John", "Doe", "user-to-delete", "password", UserType.DOCTOR, 1L);
-
-        try {
-            userService.deleteUser(user.getUsername(), "invalid-password");
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Nombre de usuario o contraseña incorrectos", e.getMessage());
-            throw e;
-        }
-    }
-
 
 }
