@@ -5,7 +5,6 @@ import com.consultorioapp.pacientes_api.Dto.MedicalRecordDto;
 import com.consultorioapp.pacientes_api.Dto.MedicalRecordInfoDto;
 import com.consultorioapp.pacientes_api.model.*;
 import com.consultorioapp.pacientes_api.repositories.RecordRepository;
-import com.consultorioapp.pacientes_api.repositories.UserRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,8 +40,8 @@ public class RecordServiceTest {
 
     public Doctor CreateDoctor(String docName) {
         Room newRoom = CreateRoom(docName + "-room");
-        Doctor newDoctor = new Doctor(docName, "Moreno", docName, "password", newRoom);
-        return userServiceImpl.createDoctor(newDoctor);
+        Doctor newDoctor = new Doctor(docName, "Moreno", docName, "password");
+        return userServiceImpl.createDoctor(newDoctor, newRoom.getId());
     }
 
     public Room CreateRoom(String name) {

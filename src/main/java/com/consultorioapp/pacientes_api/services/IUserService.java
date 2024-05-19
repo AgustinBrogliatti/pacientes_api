@@ -6,10 +6,10 @@ import com.consultorioapp.pacientes_api.model.User;
 
 
 public interface IUserService {
-    Doctor createDoctor(Doctor doctor);
+    Doctor createDoctor(Doctor doctor, Long roomId);
     Secretary createSecretary(Secretary secretary);
     Doctor updateDoctorRoom(Long doctorId, Long roomId);
     User updateUserAccess(String username, String password, String newPassword);
-    boolean deleteUser(User user);
+    boolean deleteUser(Long userId);
 
 }

@@ -22,6 +22,10 @@ public class Doctor extends User {
         this.room = room;
     }
 
+    public Doctor(String name, String lastname, String username, String password) {
+        super(name, lastname, username, password);
+    }
+
     public void addCommentToMedicalRecord(MedicalRecord medicalRecord, Comment comment) {
         medicalRecord.addComment(comment);
     }

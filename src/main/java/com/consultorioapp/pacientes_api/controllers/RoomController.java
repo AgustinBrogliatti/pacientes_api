@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
@@ -34,13 +35,29 @@ public class RoomController {
 
     // GET ../api/room
     @GetMapping(value = "")
-    public List<Room> getAllRooms() {
-        return roomService.getAllRooms();
+    public ResponseEntity<List<Room>> getAllRooms() {
+        List<Room> rooms = roomService.getAllRooms();
+        return ResponseEntity.ok(rooms);
     }
 
     // DELETE ../api/room/{roomId}
     @DeleteMapping(value = "/{roomId}")
-    public boolean deleteRoomById(@PathVariable Long roomId) {
-        return roomService.deleteRoomById(roomId);
+    public ResponseEntity<?> deleteRoomById(@PathVariable Long roomId) {
+        try {
+            boolean deleted = roomService.deleteRoomById(roomId);
+            if (deleted) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("roomId", roomId);
+                response.put("message", "Deleted successfully");
+                response.put("deleted", true);
+                return ResponseEntity.ok(response);
+            } else {
+                ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), "Error interno del servidor");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+            }
+        } catch (IllegalArgumentException e) {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
     }
 }

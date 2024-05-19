@@ -48,8 +48,8 @@ public class UserServiceTest {
     @Test
     public void testCreateUserDoctor() {
         Room newRoom = roomService.createRoom("room-2");
-        Doctor newDoctor = new Doctor("Javier", "Moreno", "user-doc", "password", newRoom);
-        Doctor createdUser = userService.createDoctor(newDoctor);
+        Doctor newDoctor = new Doctor("Javier", "Moreno", "user-doc", "password");
+        Doctor createdUser = userService.createDoctor(newDoctor, newRoom.getId());
 
         Doctor savedDoctor = (Doctor) userRepository.findById(newDoctor.getId()).orElse(null);
 
@@ -78,10 +78,10 @@ public class UserServiceTest {
     @Test(expected = RuntimeException.class)
     public void testCreateDoctorWithInvalidRoomId() {
         Room room = new Room("bad-room");
-        Doctor newDoctor = new Doctor("Javier", "Moreno", "user-bad-room", "password", room);
+        Doctor newDoctor = new Doctor("Javier", "Moreno", "user-bad-room", "password");
 
         try {
-            userService.createDoctor(newDoctor);
+            userService.createDoctor(newDoctor, room.getId());
         } catch (RuntimeException e) {
             String expectedMessage = "El roomId proporcionado no es válido";
             throw e;
@@ -93,8 +93,8 @@ public class UserServiceTest {
         Room room = roomService.createRoom("Sala 1");
         Room newRoom = roomService.createRoom("Sala 2");
 
-        Doctor newDoctor = new Doctor("John", "Doe", "user-update-room", "password", room);
-        Doctor createdUser = userService.createDoctor(newDoctor);
+        Doctor newDoctor = new Doctor("John", "Doe", "user-update-room", "password");
+        Doctor createdUser = userService.createDoctor(newDoctor, room.getId());
 
         Doctor updatedDoctor = userService.updateDoctorRoom(newDoctor.getId(), newRoom.getId());
 
@@ -115,8 +115,8 @@ public class UserServiceTest {
     @Test(expected = IllegalArgumentException.class)
     public void testUpdateDoctorRoomWithInvalidRoomId() {
         Room room = roomService.createRoom("Sala 10");
-        Doctor newDoctor = new Doctor("John", "Doe", "user-invalid-room", "password", room);
-        Doctor createdUser = userService.createDoctor(newDoctor);
+        Doctor newDoctor = new Doctor("John", "Doe", "user-invalid-room", "password");
+        Doctor createdUser = userService.createDoctor(newDoctor, room.getId());
         try {
             userService.updateDoctorRoom(newDoctor.getId(), 999L);
         } catch (IllegalArgumentException e) {
@@ -153,7 +153,7 @@ public class UserServiceTest {
         Secretary newUser = new Secretary("John", "Doe", "user-to-delete", "password");
         Secretary createdUser = userService.createSecretary(newUser);
 
-        boolean isDeleted = userService.deleteUser(createdUser);
+        boolean isDeleted = userService.deleteUser(newUser.getId()w);
         Assert.assertTrue(isDeleted);
     }
 
@@ -162,7 +162,7 @@ public class UserServiceTest {
         Secretary newUser = new Secretary("John", "Doe", "false-user", "password");
 
         try {
-            userService.deleteUser(newUser);
+            userService.deleteUser(newUser.getId());
         } catch (IllegalArgumentException e) {
             Assert.assertEquals("Usuario no encontrado. Username: false-user", e.getMessage());
             throw e;

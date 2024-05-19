@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.print.Doc;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -21,13 +21,13 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Transactional
-    public Doctor createDoctor(Doctor doctor) {
+    public Doctor createDoctor(Doctor doctor, Long roomId) {
         if (userRepository.findByUsername(doctor.getUsername()).isPresent()) {
             throw new IllegalArgumentException("El nombre de usuario ya está en uso");
         }
-
-        Room room = roomRepository.findById(doctor.getRoom().getId())
-                .orElseThrow(() -> new IllegalArgumentException("El roomId proporcionado no es válido"));
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("La sala con ID " + roomId + " no existe"));
+        doctor.setRoom(room);
         return userRepository.save(doctor);
     }
 
@@ -53,6 +53,9 @@ public class UserServiceImpl implements IUserService {
         if (roomOptional.isEmpty()) {
             throw new IllegalArgumentException("Habitación con id " + newRoomId + " no encontrada");
         }
+        if (Objects.equals(doctorOptional.get().getRoom().getId(), newRoomId)) {
+            throw new IllegalArgumentException("la roomId: " + newRoomId + " ya se encuentra asignada a este usuario id: " + doctorId);
+        }
 
         Doctor doctor = (Doctor) doctorOptional.get();
         Room room = roomOptional.get();
@@ -66,7 +69,7 @@ public class UserServiceImpl implements IUserService {
         Optional<User> userOptional = userRepository.findByUsername(username);
 
         if (userOptional.isEmpty()) {
-            throw new IllegalArgumentException("Usuario no encontrado. Username: " + username);
+            throw new IllegalArgumentException("Nombre de usuario o contraseña incorrectos");
         }
 
         User user = userOptional.get();
@@ -81,17 +84,13 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Transactional
-    public boolean deleteUser(User user) {
-        Optional<User> userOptional = userRepository.findByUsername(user.getUsername());
+    public boolean deleteUser(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty()) {
-            throw new IllegalArgumentException("Usuario no encontrado. Username: " + user.getUsername());
+            throw new IllegalArgumentException("Usuario no encontrado. ID: " + userId);
         }
 
-        User userReceived = userOptional.get();
-
-        if (!user.getUsername().equals(userReceived.getUsername()) || !user.getPassword().equals(userReceived.getPassword())) {
-            throw new IllegalArgumentException("Nombre de usuario o contraseña incorrectos");
-        }
+        User user = userOptional.get();
 
         try {
             userRepository.delete(user);
@@ -100,5 +99,4 @@ public class UserServiceImpl implements IUserService {
             return false;
         }
     }
-
 }
