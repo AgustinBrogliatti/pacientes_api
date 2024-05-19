@@ -20,6 +20,7 @@ import java.util.Optional;
 
 @Service
 public class RecordServiceImpl implements IRecordService {
+
     @Autowired
     private RecordRepository recordRepository;
 
@@ -43,13 +44,6 @@ public class RecordServiceImpl implements IRecordService {
         Patient patient = CreatePatientService(patientData);
         medicalRecord.setPatient(patient);
         return recordRepository.save(medicalRecord);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public MedicalRecord getRecordById(Long id) {
-        return recordRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Registro médico no encontrado. ID: " + id));
     }
 
     @Override

@@ -22,6 +22,9 @@ import java.util.List;
 @Configuration
 public class RecordServiceTest {
     @Autowired
+    private RecordRepository recordRepository;
+
+    @Autowired
     private PatientServiceImpl patientServiceImpl;
 
     @Autowired
@@ -75,7 +78,7 @@ public class RecordServiceTest {
     @Test
     public void testCreateMedicalRecord() {
         MedicalRecord newRecord  = CreateRecord(1111L, "email1","user-doc1");
-        MedicalRecord recoveredRecord = recordServiceImpl.getRecordById(newRecord.getId());
+        MedicalRecord recoveredRecord = recordRepository.findById(newRecord.getId()).get();
 
         Assert.assertNotNull(recoveredRecord);
         Assert.assertEquals(newRecord.getPatient().getDni(), recoveredRecord.getPatient().getDni());
