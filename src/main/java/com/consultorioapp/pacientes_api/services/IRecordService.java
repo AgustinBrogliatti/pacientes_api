@@ -21,5 +21,4 @@ public interface IRecordService {
 //    void addComment(MedicalRecord medicalRecord, String comment);
 //    void deleteComment(MedicalRecord medicalRecord, String comment);
 //    void updateComment(MedicalRecord medicalRecord, String comment);
-
 }
