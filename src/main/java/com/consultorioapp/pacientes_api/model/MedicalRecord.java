@@ -19,7 +19,7 @@ public class MedicalRecord {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "patient_id", referencedColumnName = "dni", nullable = false)
     private Patient patient;
 

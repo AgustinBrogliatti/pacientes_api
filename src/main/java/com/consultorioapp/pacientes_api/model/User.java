@@ -34,9 +34,6 @@ public abstract class User {
     @Column(nullable = false, length = 50)
     private String password;
 
-    @Transient
-    private Room room;
-
     public User(String name, String lastname, String username, String password) {
         this.name = name;
         this.lastname = lastname;
