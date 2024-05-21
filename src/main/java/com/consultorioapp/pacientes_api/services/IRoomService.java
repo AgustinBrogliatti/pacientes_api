@@ -5,7 +5,7 @@ import com.consultorioapp.pacientes_api.model.Room;
 import java.util.List;
 
 public interface IRoomService {
-    Room createRoom(String roomName);
+    Room createRoom(Room room);
     List<Room> getAllRooms();
     boolean deleteRoomById(Long roomId);
 }

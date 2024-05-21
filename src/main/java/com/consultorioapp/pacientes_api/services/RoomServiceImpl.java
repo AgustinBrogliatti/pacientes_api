@@ -18,35 +18,33 @@ public class RoomServiceImpl implements IRoomService{
 
     @Override
     @Transactional
-    public Room createRoom(String roomName) {
+    public Room createRoom(Room room) {
         try {
-            Room newRoom = new Room(roomName);
-            return roomRepository.save(newRoom);
-        } catch (DataIntegrityViolationException e) {
-            throw new IllegalArgumentException("El nombre de la sala ya está en uso");
+            return roomRepository.save(room);
+        } catch (Exception e) {
+            throw e;
         }
     }
     @Override
     @Transactional(readOnly = true)
     public List<Room> getAllRooms(){
-        List<Room> rooms = new ArrayList<>();
-        roomRepository.findAll().forEach(rooms::add);
-        return rooms;
+        try {
+            List<Room> rooms = new ArrayList<>();
+            roomRepository.findAll().forEach(rooms::add);
+            return rooms;
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public boolean deleteRoomById(Long roomId) {
-        Optional<Room> roomOptional = roomRepository.findById(roomId);
-        if (roomOptional.isEmpty()) {
-            throw new IllegalArgumentException("Sala no encontrada. ID: " + roomId);
-        }
-
-        Room room = roomOptional.get();
-
         try {
+            Optional<Room> roomOptional = roomRepository.findById(roomId);
+            Room room = roomOptional.get();
             roomRepository.delete(room);
             return true;
         } catch (Exception e) {
-            return false;
+            throw  e;
         }
     }
 

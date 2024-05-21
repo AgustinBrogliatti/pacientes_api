@@ -9,7 +9,7 @@ public interface IUserService {
     Doctor createDoctor(Doctor doctor, Long roomId);
     Secretary createSecretary(Secretary secretary);
     Doctor updateDoctorRoom(Long doctorId, Long roomId);
-    User updateUserAccess(String username, String password, String newPassword);
+    boolean updateUserAccess(String username, String password, String newPassword);
     boolean deleteUser(Long userId);
 
 }

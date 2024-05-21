@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/room")
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE})
 public class RoomController {
 
     @Autowired
@@ -22,12 +22,11 @@ public class RoomController {
 
     // POST ../api/room
     @PostMapping(value = "")
-    public ResponseEntity<?> createRoom(@RequestBody Map<String, String> requestBody) {
-        String roomName = requestBody.get("roomName");
+    public ResponseEntity<?> createRoom(@RequestBody Room room) {
         try {
-            Room room = roomService.createRoom(roomName);
-            return ResponseEntity.ok(room);
-        } catch (IllegalArgumentException e) {
+            Room roomCreated = roomService.createRoom(room);
+            return ResponseEntity.ok(roomCreated);
+        } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
@@ -35,9 +34,14 @@ public class RoomController {
 
     // GET ../api/room
     @GetMapping(value = "")
-    public ResponseEntity<List<Room>> getAllRooms() {
-        List<Room> rooms = roomService.getAllRooms();
-        return ResponseEntity.ok(rooms);
+    public ResponseEntity<?> getAllRooms() {
+        try {
+            List<Room> rooms = roomService.getAllRooms();
+            return ResponseEntity.ok(rooms);
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
     }
 
     // DELETE ../api/room/{roomId}
@@ -45,17 +49,12 @@ public class RoomController {
     public ResponseEntity<?> deleteRoomById(@PathVariable Long roomId) {
         try {
             boolean deleted = roomService.deleteRoomById(roomId);
-            if (deleted) {
-                Map<String, Object> response = new HashMap<>();
-                response.put("roomId", roomId);
-                response.put("message", "Deleted successfully");
-                response.put("deleted", true);
-                return ResponseEntity.ok(response);
-            } else {
-                ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), "Error interno del servidor");
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-            }
-        } catch (IllegalArgumentException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("roomId", roomId);
+            response.put("message", "Deleted successfully");
+            response.put("deleted", true);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }

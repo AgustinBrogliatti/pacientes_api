@@ -27,7 +27,7 @@ public class UserController {
         try {
             Doctor createdDoctor = userService.createDoctor(doctor, roomId);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdDoctor);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
@@ -39,7 +39,7 @@ public class UserController {
         try {
             Secretary createSecretary = userService.createSecretary(secretary);
             return ResponseEntity.status(HttpStatus.CREATED).body(createSecretary);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
@@ -51,7 +51,7 @@ public class UserController {
         try {
             Doctor updatedDoctor = userService.updateDoctorRoom(doctorId, roomId);
             return ResponseEntity.ok(updatedDoctor);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
@@ -65,14 +65,11 @@ public class UserController {
         String newPassword = requestBody.get("newPassword");
 
         try {
-            User updatedUser = userService.updateUserAccess(username, password, newPassword);
-            return ResponseEntity.ok(updatedUser);
-        } catch (IllegalArgumentException e) {
+            boolean updated = userService.updateUserAccess(username, password, newPassword);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), "Error interno del servidor");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
@@ -81,17 +78,12 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
         try {
             boolean deleted = userService.deleteUser(userId);
-            if (deleted) {
-                Map<String, Object> response = new HashMap<>();
-                response.put("user_id", userId);
-                response.put("message", "Deleted successfully");
-                response.put("deleted", true);
-                return ResponseEntity.ok(response);
-            } else {
-                ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), "Error interno del servidor");
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-            }
-        } catch (IllegalArgumentException e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("user_id", userId);
+            response.put("message", "Deleted successfully");
+            response.put("deleted", true);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
