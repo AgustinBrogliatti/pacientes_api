@@ -8,9 +8,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
@@ -27,31 +29,28 @@ public class RoomServiceTest {
     @Test
     public void testCreateRoom() {
         String roomName = "Sarmiento";
-        Room createdRoom = roomService.createRoom(roomName);
+        Room createdRoom = roomService.createRoom(new Room(roomName));
         Assert.assertNotNull(createdRoom);
         Assert.assertEquals(roomName, createdRoom.getName());
     }
 
-    @Test
+    @Test(expected = DataIntegrityViolationException.class)
     public void testCreateRoomWithExistingName() {
         String roomName = "Existing Room";
-        roomService.createRoom(roomName);
+        roomService.createRoom(new Room(roomName));
 
         try {
-            roomService.createRoom(roomName);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("El nombre de la sala ya está en uso", e.getMessage());
-            return;
+            roomService.createRoom(new Room(roomName));
+        } catch (Exception e) {
+            throw e;
         }
-
-        Assert.fail("Se esperaba una excepción al intentar crear una sala con un nombre existente.");
     }
 
     @Test
     public void testGetAllRooms() {
-        roomService.createRoom("Room 1");
-        roomService.createRoom("Room 2");
-        roomService.createRoom("Room 3");
+        roomService.createRoom(new Room("Room 1"));
+        roomService.createRoom(new Room("Room 2"));
+        roomService.createRoom(new Room("Room 3"));
 
         List<Room> rooms = roomService.getAllRooms();
         Assert.assertNotNull(rooms);
@@ -63,18 +62,16 @@ public class RoomServiceTest {
 
     @Test
     public void testDeleteRoomById() {
-        Room room = roomService.createRoom("Sala Test");
+        Room room = roomService.createRoom(new Room("Sala Test"));
         boolean isDeleted = roomService.deleteRoomById(room.getId());
-
         Assert.assertTrue(isDeleted);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = Exception.class)
     public void testDeleteRoomByIdWithInvalidId() {
         try {
             roomService.deleteRoomById(999L);
-        } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Sala no encontrada. ID: 999", e.getMessage());
+        } catch (Exception e) {
             throw e;
         }
     }

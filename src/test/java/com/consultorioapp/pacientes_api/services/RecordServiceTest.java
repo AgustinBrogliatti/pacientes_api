@@ -45,7 +45,7 @@ public class RecordServiceTest {
     }
 
     public Room CreateRoom(String name) {
-        return roomServiceImpl.createRoom(name);
+        return roomServiceImpl.createRoom(new Room(name));
     }
 
     public MedicalRecord CreateRecord(Long dni, String email, String docName) {
