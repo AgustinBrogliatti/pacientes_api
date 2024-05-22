@@ -18,25 +18,16 @@ public class PatientServiceImpl implements IPatientService {
     @Override
     @Transactional
     public Patient createPatient(Patient patient) {
-        Optional<Patient> existingPatient = patientRepository.findById(patient.getDni());
-        if (existingPatient.isPresent()) {
-            throw new IllegalArgumentException("Ya existe un paciente con el DNI proporcionado");
-        }
-
-        if (patient.getEmail() != null && patientRepository.existsByEmail(patient.getEmail())) {
-            throw new IllegalArgumentException("El email proporcionado ya está asociado a otro paciente");
-        }
-
-        return patientRepository.save(patient);
+        try {
+            return patientRepository.save(patient);
+        } catch(Exception e) {throw e;}
     }
 
     @Override
     @Transactional
     public Patient updatePatient(Patient newPatientData) {
-        Patient patient = patientRepository.findById(newPatientData.getDni())
-                .orElseThrow(() -> new IllegalArgumentException("Paciente no encontrado"));
-
-        return patientRepository.save(newPatientData);
+        try {
+            return patientRepository.save(newPatientData);
+        } catch(Exception e) {throw e;}
     }
-
 }

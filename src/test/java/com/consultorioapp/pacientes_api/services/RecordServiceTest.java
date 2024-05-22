@@ -273,7 +273,6 @@ public class RecordServiceTest {
         Assert.assertEquals(newMedicines, updatedRecord.getMedicines());
     }
 
-
     @Test
     public void testGetRecords() {
         List<MedicalRecordDto> records = recordServiceImpl.getRecords();
