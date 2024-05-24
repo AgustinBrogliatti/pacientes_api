@@ -50,14 +50,6 @@ public class RecordServiceImpl implements IRecordService {
 
     @Override
     @Transactional(readOnly = true)
-    public MedicalRecordDetailsDto getRecordDetails(Long id) {
-        try {
-            return recordRepository.findDetails(id);
-        } catch(Exception e) {throw e;}
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<MedicalRecordDto> getRecords() {
         try {
             return recordRepository.findAllPreview();
@@ -85,6 +77,14 @@ public class RecordServiceImpl implements IRecordService {
     public List<MedicalRecordDto> getRecordsByFullName(String fullName) {
         try {
             return recordRepository.findByPatientFullNameStartsWith(fullName);
+        } catch(Exception e) {throw e;}
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public MedicalRecordDetailsDto getRecordDetails(Long id) {
+        try {
+            return recordRepository.findDetails(id);
         } catch(Exception e) {throw e;}
     }
 
@@ -118,6 +118,20 @@ public class RecordServiceImpl implements IRecordService {
             existingRecord.setDoctor(newDoctor);
 
             return recordRepository.save(existingRecord);
+        } catch(Exception e) {throw e;}
+    }
+    @Override
+    @Transactional
+    public boolean deleteRecordById(Long recordId) {
+        try {
+            Optional<MedicalRecord> optionalMedicalRecord = recordRepository.findById(recordId);
+            MedicalRecord medicalRecord = optionalMedicalRecord.get();
+
+            Patient patient = medicalRecord.getPatient();
+            patientRepository.deleteById(patient.getDni());
+
+            recordRepository.delete(medicalRecord);
+            return true;
         } catch(Exception e) {throw e;}
     }
 }
