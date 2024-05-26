@@ -33,7 +33,7 @@ public class MedicalRecord {
     @Column(name = "previous_history", length = 2000)
     private String previousHistory;
 
-    @OneToMany(mappedBy = "medicalRecord", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "medicalRecord", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     @Column(name = "allergies", length = 500)

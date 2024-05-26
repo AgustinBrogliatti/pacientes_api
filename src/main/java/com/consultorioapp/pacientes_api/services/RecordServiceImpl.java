@@ -44,6 +44,12 @@ public class RecordServiceImpl implements IRecordService {
             Patient patientData = medicalRecord.getPatient();
             Patient patient = CreatePatientService(patientData);
             medicalRecord.setPatient(patient);
+
+            Long doctorId = medicalRecord.getDoctor().getId();
+            Doctor doctor = (Doctor) userRepository.findById(doctorId)
+                    .orElseThrow(() -> new IllegalArgumentException("Médico no encontrado. ID: " + doctorId));
+            medicalRecord.setDoctor(doctor);
+
             return recordRepository.save(medicalRecord);
         } catch(Exception e) {throw e;}
     }
