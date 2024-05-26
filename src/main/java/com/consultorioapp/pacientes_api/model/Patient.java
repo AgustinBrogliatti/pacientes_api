@@ -34,9 +34,4 @@ public class Patient {
 
     @Column(unique = true, length = 50)
     private String email;
-
-    public MedicalRecord getMedicalRecord() {
-        //TODO
-        return null;
-    }
 }

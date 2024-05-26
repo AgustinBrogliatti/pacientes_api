@@ -95,14 +95,16 @@ public class RecordServiceTest {
 
         Assert.assertNotNull(recordDetails);
         Assert.assertNotNull(newRecord.getId().toString(), recordDetails.getId());
-        Assert.assertNotNull(newRecord.getPatient().getDni().toString(), recordDetails.getPatientDni());
+        Assert.assertNotNull(newRecord.getPatient().getDni().toString(), recordDetails.getPatient().getDni());
         Assert.assertNotNull(newRecord.getDoctor().getName(), recordDetails.getDoctorName());
-        Assert.assertNotNull(newRecord.getPatient().getName(), recordDetails.getPatientName());
-        Assert.assertNotNull(newRecord.getPatient().getLastname(), recordDetails.getPatientLastname());
-        Assert.assertNotNull(newRecord.getPatient().getBirthDate().toString(), recordDetails.getPatientBirthdate());
-        Assert.assertNotNull(newRecord.getPatient().getPhoneNumber(), recordDetails.getPatientPhone());
-        Assert.assertNotNull(newRecord.getPatient().getEmail(), recordDetails.getPatientEmail());
-        Assert.assertNotNull(newRecord.getPatient().getAddress(), recordDetails.getPatientAddress());
+        Assert.assertNotNull(newRecord.getPatient().getDni().toString(), recordDetails.getPatient().getDni());
+        Assert.assertNotNull(newRecord.getDoctor().getName(), recordDetails.getDoctorName());
+        Assert.assertNotNull(newRecord.getPatient().getName(), recordDetails.getPatient().getName());
+        Assert.assertNotNull(newRecord.getPatient().getLastname(), recordDetails.getPatient().getLastname());
+        Assert.assertNotNull(newRecord.getPatient().getBirthDate().toString(), recordDetails.getPatient().getBirthDate().toString());
+        Assert.assertNotNull(newRecord.getPatient().getPhoneNumber(), recordDetails.getPatient().getPhoneNumber());
+        Assert.assertNotNull(newRecord.getPatient().getEmail(), recordDetails.getPatient().getEmail());
+        Assert.assertNotNull(newRecord.getPatient().getAddress(), recordDetails.getPatient().getAddress());
         Assert.assertNotNull(newRecord.getHealthInsurances(), recordDetails.getHealthInsurances());
         Assert.assertNotNull(newRecord.getAllergies(), recordDetails.getAllergies());
         Assert.assertNotNull(newRecord.getMedicines(), recordDetails.getMedicines());

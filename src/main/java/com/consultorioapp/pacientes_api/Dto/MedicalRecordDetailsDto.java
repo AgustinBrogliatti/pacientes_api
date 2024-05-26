@@ -1,5 +1,6 @@
 package com.consultorioapp.pacientes_api.Dto;
 
+import com.consultorioapp.pacientes_api.model.Patient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,14 +14,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class MedicalRecordDetailsDto {
     private Long id;
+    private Long doctorId;
     private String doctorName;
-    private Long patientDni;
-    private String patientLastname;
-    private String patientName;
-    private Date patientBirthdate;
-    private String patientPhone;
-    private String patientEmail;
-    private String patientAddress;
+    private Patient patient;
     private String healthInsurances;
     private String allergies;
     private String medicines;
