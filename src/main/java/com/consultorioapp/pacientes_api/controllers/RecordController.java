@@ -4,6 +4,7 @@ import com.consultorioapp.pacientes_api.Dto.MedicalRecordDetailsDto;
 import com.consultorioapp.pacientes_api.Dto.MedicalRecordDto;
 import com.consultorioapp.pacientes_api.configuration.ErrorResponse;
 import com.consultorioapp.pacientes_api.model.MedicalRecord;
+import com.consultorioapp.pacientes_api.model.Patient;
 import com.consultorioapp.pacientes_api.services.IRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -82,6 +83,17 @@ public class RecordController {
         try {
             MedicalRecordDetailsDto recordDetails = recordService.getRecordDetails(id);
             return ResponseEntity.ok(recordDetails);
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    @PutMapping("/{id}/patient")
+    public ResponseEntity<?> updatePatient(@PathVariable Long id, @RequestBody Patient patient) {
+        try {
+            Patient patientUpdated = recordService.updatePatient(id, patient);
+            return ResponseEntity.ok(patientUpdated);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);

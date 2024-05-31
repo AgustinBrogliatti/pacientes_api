@@ -36,6 +36,10 @@ public class RecordServiceImpl implements IRecordService {
     public Patient CreatePatientService(Patient patient) {
         return patientServiceImpl.createPatient(patient);
     }
+    public Patient UpdatePatientService(Patient patient) {
+        return patientServiceImpl.updatePatient(patient);
+    }
+
 
     @Override
     @Transactional
@@ -100,9 +104,10 @@ public class RecordServiceImpl implements IRecordService {
         try {
             Optional<MedicalRecord> optionalMedicalRecord = recordRepository.findById(recordId);
             MedicalRecord medicalRecord = optionalMedicalRecord.get();
-            medicalRecord.setPatient(patient);
-            recordRepository.save(medicalRecord);
-            return patient;
+            if(patient.getDni().equals(medicalRecord.getPatient().getDni())) {
+                return UpdatePatientService(patient);
+            };
+            throw new IllegalArgumentException();
         } catch(Exception e) {throw e;}
     }
 
