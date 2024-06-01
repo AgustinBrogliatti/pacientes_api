@@ -2,6 +2,7 @@ package com.consultorioapp.pacientes_api.controllers;
 
 import com.consultorioapp.pacientes_api.Dto.MedicalRecordDetailsDto;
 import com.consultorioapp.pacientes_api.Dto.MedicalRecordDto;
+import com.consultorioapp.pacientes_api.Dto.MedicalRecordInfoDto;
 import com.consultorioapp.pacientes_api.configuration.ErrorResponse;
 import com.consultorioapp.pacientes_api.model.MedicalRecord;
 import com.consultorioapp.pacientes_api.model.Patient;
@@ -25,7 +26,8 @@ public class RecordController {
     @PostMapping(value = "")
     public ResponseEntity<?> createMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
         try {
-            MedicalRecord createdRecord = recordService.createMedicalRecord(medicalRecord);
+
+            MedicalRecordDetailsDto createdRecord = recordService.createMedicalRecord(medicalRecord);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdRecord);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), e.getMessage());
@@ -94,6 +96,18 @@ public class RecordController {
         try {
             Patient patientUpdated = recordService.updatePatient(id, patient);
             return ResponseEntity.ok(patientUpdated);
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    @PutMapping("/")
+    public ResponseEntity<?> updateInfo(@RequestBody MedicalRecordInfoDto newRecordData) {
+        try {
+
+            MedicalRecordDetailsDto recordUpdated = recordService.updateRecordInfo(newRecordData);
+            return ResponseEntity.ok(recordUpdated);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);

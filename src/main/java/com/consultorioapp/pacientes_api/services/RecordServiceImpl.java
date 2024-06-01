@@ -40,10 +40,26 @@ public class RecordServiceImpl implements IRecordService {
         return patientServiceImpl.updatePatient(patient);
     }
 
+    public MedicalRecordDetailsDto convertToDto(MedicalRecord medicalRecord) {
+        MedicalRecordDetailsDto dto = new MedicalRecordDetailsDto();
+        dto.setId(medicalRecord.getId());
+        dto.setDoctorId(medicalRecord.getDoctor().getId());
+        dto.setDoctorName(medicalRecord.getDoctor().getName());
+        dto.setPatient(medicalRecord.getPatient());
+        dto.setDoctorId(medicalRecord.getDoctor().getId());
+        dto.setHealthInsurances(medicalRecord.getHealthInsurances());
+        dto.setPreviousHistory(medicalRecord.getPreviousHistory());
+        dto.setAllergies(medicalRecord.getAllergies());
+        dto.setMedicines(medicalRecord.getMedicines());
+        return dto;
+    }
+
+
 
     @Override
     @Transactional
-    public MedicalRecord createMedicalRecord(MedicalRecord medicalRecord) {
+    public
+    MedicalRecordDetailsDto createMedicalRecord(MedicalRecord medicalRecord) {
         try {
             Patient patientData = medicalRecord.getPatient();
             Patient patient = CreatePatientService(patientData);
@@ -54,7 +70,7 @@ public class RecordServiceImpl implements IRecordService {
                     .orElseThrow(() -> new IllegalArgumentException("Médico no encontrado. ID: " + doctorId));
             medicalRecord.setDoctor(doctor);
 
-            return recordRepository.save(medicalRecord);
+            return convertToDto(recordRepository.save(medicalRecord));
         } catch(Exception e) {throw e;}
     }
 
@@ -113,7 +129,7 @@ public class RecordServiceImpl implements IRecordService {
 
     @Override
     @Transactional
-    public MedicalRecord updateRecordInfo(MedicalRecordInfoDto newRecordData) {
+    public MedicalRecordDetailsDto updateRecordInfo(MedicalRecordInfoDto newRecordData) {
         try {
             Optional<MedicalRecord> optionalMedicalRecord = recordRepository.findById(newRecordData.getId());
             MedicalRecord existingRecord = optionalMedicalRecord.get();
@@ -128,7 +144,7 @@ public class RecordServiceImpl implements IRecordService {
                     .orElseThrow(() -> new NoSuchElementException("Doctor no encontrado ID: " + newRecordData.getDoctorId()));
             existingRecord.setDoctor(newDoctor);
 
-            return recordRepository.save(existingRecord);
+            return convertToDto(recordRepository.save(existingRecord));
         } catch(Exception e) {throw e;}
     }
     @Override
