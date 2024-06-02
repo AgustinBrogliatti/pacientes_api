@@ -12,7 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/medical-record")
@@ -115,8 +117,12 @@ public class RecordController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteRecord(@PathVariable Long id) {
         try {
-            boolean isDeleted = recordService.deleteRecordById(id);
-            return ResponseEntity.ok(isDeleted);
+            recordService.deleteRecordById(id);
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", id);
+            response.put("message", "Deleted successfully");
+            response.put("deleted", true);
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);

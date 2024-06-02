@@ -45,7 +45,7 @@ public abstract class User {
         return room.getPatients();
     }
 
-    public String getUserIdentity() {
+    public String getRole() {
         DiscriminatorValue discriminatorValue = getClass().getAnnotation(DiscriminatorValue.class);
         if (discriminatorValue != null) {
             return discriminatorValue.value();

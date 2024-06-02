@@ -153,10 +153,6 @@ public class RecordServiceImpl implements IRecordService {
         try {
             Optional<MedicalRecord> optionalMedicalRecord = recordRepository.findById(recordId);
             MedicalRecord medicalRecord = optionalMedicalRecord.get();
-
-            Patient patient = medicalRecord.getPatient();
-            patientRepository.deleteById(patient.getDni());
-
             recordRepository.delete(medicalRecord);
             return true;
         } catch(Exception e) {throw e;}
