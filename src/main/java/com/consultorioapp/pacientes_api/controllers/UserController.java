@@ -1,5 +1,7 @@
 package com.consultorioapp.pacientes_api.controllers;
 
+import com.consultorioapp.pacientes_api.Dto.DoctorDto;
+import com.consultorioapp.pacientes_api.Dto.SecretaryDto;
 import com.consultorioapp.pacientes_api.configuration.ErrorResponse;
 import com.consultorioapp.pacientes_api.model.Doctor;
 import com.consultorioapp.pacientes_api.model.Secretary;
@@ -25,7 +27,7 @@ public class UserController {
     @PostMapping(value = "/doctor")
     public ResponseEntity<?> createDoctor(@RequestBody Doctor doctor, @RequestParam Long roomId) {
         try {
-            Doctor createdDoctor = userService.createDoctor(doctor, roomId);
+            DoctorDto createdDoctor = userService.createDoctor(doctor, roomId);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdDoctor);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), e.getMessage());
@@ -37,7 +39,7 @@ public class UserController {
     @PostMapping(value = "/secretary")
     public ResponseEntity<?> createSecretary(@RequestBody Secretary secretary) {
         try {
-            Secretary createSecretary = userService.createSecretary(secretary);
+            SecretaryDto createSecretary = userService.createSecretary(secretary);
             return ResponseEntity.status(HttpStatus.CREATED).body(createSecretary);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), e.getMessage());
@@ -49,7 +51,7 @@ public class UserController {
     @PutMapping(value = "/doctor/{doctorId}/room/{roomId}")
     public ResponseEntity<?> updateDoctorRoom(@PathVariable Long doctorId, @PathVariable Long roomId) {
         try {
-            Doctor updatedDoctor = userService.updateDoctorRoom(doctorId, roomId);
+            DoctorDto updatedDoctor = userService.updateDoctorRoom(doctorId, roomId);
             return ResponseEntity.ok(updatedDoctor);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), e.getMessage());

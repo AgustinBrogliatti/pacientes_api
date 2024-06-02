@@ -1,8 +1,8 @@
 package com.consultorioapp.pacientes_api.services;
 
 import com.consultorioapp.pacientes_api.Dto.MedicalRecordDetailsDto;
-import com.consultorioapp.pacientes_api.Dto.MedicalRecordDto;
-import com.consultorioapp.pacientes_api.Dto.MedicalRecordInfoDto;
+import com.consultorioapp.pacientes_api.Dto.MedicalRecordPreviewDto;
+import com.consultorioapp.pacientes_api.Dto.MedicalRecordHealthDto;
 import com.consultorioapp.pacientes_api.model.Doctor;
 import com.consultorioapp.pacientes_api.model.MedicalRecord;
 import com.consultorioapp.pacientes_api.model.Patient;
@@ -76,7 +76,7 @@ public class RecordServiceImpl implements IRecordService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<MedicalRecordDto> getRecords() {
+    public List<MedicalRecordPreviewDto> getRecords() {
         try {
             return recordRepository.findAllPreview();
         } catch(Exception e) {throw e;}
@@ -84,7 +84,7 @@ public class RecordServiceImpl implements IRecordService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<MedicalRecordDto> getRecordsByDni(String dni) {
+    public List<MedicalRecordPreviewDto> getRecordsByDni(String dni) {
         try {
             return recordRepository.findByDniStartsWith(dni);
         } catch(Exception e) {throw e;}
@@ -92,7 +92,7 @@ public class RecordServiceImpl implements IRecordService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<MedicalRecordDto> getRecordsByLastName(String lastname) {
+    public List<MedicalRecordPreviewDto> getRecordsByLastName(String lastname) {
         try {
             return recordRepository.findByLastName(lastname);
         } catch(Exception e) {throw e;}
@@ -100,7 +100,7 @@ public class RecordServiceImpl implements IRecordService {
     }
     @Override
     @Transactional(readOnly = true)
-    public List<MedicalRecordDto> getRecordsByFullName(String fullName) {
+    public List<MedicalRecordPreviewDto> getRecordsByFullName(String fullName) {
         try {
             return recordRepository.findByPatientFullNameStartsWith(fullName);
         } catch(Exception e) {throw e;}
@@ -129,7 +129,7 @@ public class RecordServiceImpl implements IRecordService {
 
     @Override
     @Transactional
-    public MedicalRecordDetailsDto updateRecordInfo(MedicalRecordInfoDto newRecordData) {
+    public MedicalRecordDetailsDto updateRecordInfo(MedicalRecordHealthDto newRecordData) {
         try {
             Optional<MedicalRecord> optionalMedicalRecord = recordRepository.findById(newRecordData.getId());
             MedicalRecord existingRecord = optionalMedicalRecord.get();

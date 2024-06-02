@@ -1,8 +1,8 @@
 package com.consultorioapp.pacientes_api.controllers;
 
 import com.consultorioapp.pacientes_api.Dto.MedicalRecordDetailsDto;
-import com.consultorioapp.pacientes_api.Dto.MedicalRecordDto;
-import com.consultorioapp.pacientes_api.Dto.MedicalRecordInfoDto;
+import com.consultorioapp.pacientes_api.Dto.MedicalRecordPreviewDto;
+import com.consultorioapp.pacientes_api.Dto.MedicalRecordHealthDto;
 import com.consultorioapp.pacientes_api.configuration.ErrorResponse;
 import com.consultorioapp.pacientes_api.model.MedicalRecord;
 import com.consultorioapp.pacientes_api.model.Patient;
@@ -26,7 +26,6 @@ public class RecordController {
     @PostMapping(value = "")
     public ResponseEntity<?> createMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
         try {
-
             MedicalRecordDetailsDto createdRecord = recordService.createMedicalRecord(medicalRecord);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdRecord);
         } catch (Exception e) {
@@ -38,7 +37,7 @@ public class RecordController {
     @GetMapping("")
     public ResponseEntity<?> getRecords() {
         try {
-            List<MedicalRecordDto> records = recordService.getRecords();
+            List<MedicalRecordPreviewDto> records = recordService.getRecords();
             return ResponseEntity.ok(records);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());
@@ -50,7 +49,7 @@ public class RecordController {
     @GetMapping("/dni")
     public ResponseEntity<?> getRecordsByDni(@RequestParam String dni) {
         try {
-            List<MedicalRecordDto> records = recordService.getRecordsByDni(dni);
+            List<MedicalRecordPreviewDto> records = recordService.getRecordsByDni(dni);
             return ResponseEntity.ok(records);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());
@@ -61,7 +60,7 @@ public class RecordController {
     @GetMapping("/lastname")
     public ResponseEntity<?> getRecordsByLastName(@RequestParam String lastname) {
         try {
-            List<MedicalRecordDto> records = recordService.getRecordsByLastName(lastname);
+            List<MedicalRecordPreviewDto> records = recordService.getRecordsByLastName(lastname);
             return ResponseEntity.ok(records);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());
@@ -72,7 +71,7 @@ public class RecordController {
     @GetMapping("/fullname")
     public ResponseEntity<?> getRecordsByFullName(@RequestParam String fullName) {
         try {
-            List<MedicalRecordDto> records = recordService.getRecordsByFullName(fullName);
+            List<MedicalRecordPreviewDto> records = recordService.getRecordsByFullName(fullName);
             return ResponseEntity.ok(records);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());
@@ -103,11 +102,21 @@ public class RecordController {
     }
 
     @PutMapping("/")
-    public ResponseEntity<?> updateInfo(@RequestBody MedicalRecordInfoDto newRecordData) {
+    public ResponseEntity<?> updateInfo(@RequestBody MedicalRecordHealthDto newRecordData) {
         try {
-
             MedicalRecordDetailsDto recordUpdated = recordService.updateRecordInfo(newRecordData);
             return ResponseEntity.ok(recordUpdated);
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteRecord(@PathVariable Long id) {
+        try {
+            boolean isDeleted = recordService.deleteRecordById(id);
+            return ResponseEntity.ok(isDeleted);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);

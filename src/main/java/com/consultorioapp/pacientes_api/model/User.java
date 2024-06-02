@@ -44,4 +44,13 @@ public abstract class User {
     public List<Patient> getWaitingLine(Room room) {
         return room.getPatients();
     }
+
+    public String getUserIdentity() {
+        DiscriminatorValue discriminatorValue = getClass().getAnnotation(DiscriminatorValue.class);
+        if (discriminatorValue != null) {
+            return discriminatorValue.value();
+        } else {
+            return null;
+        }
+    }
 }

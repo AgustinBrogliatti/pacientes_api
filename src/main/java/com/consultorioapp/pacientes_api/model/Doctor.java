@@ -17,11 +17,6 @@ public class Doctor extends User {
     @JoinColumn(name = "room_id", referencedColumnName = "id")
     private Room room;
 
-    public Doctor(String name, String lastname, String username, String password, Room room) {
-        super(name, lastname, username, password);
-        this.room = room;
-    }
-
     public Doctor(String name, String lastname, String username, String password) {
         super(name, lastname, username, password);
     }

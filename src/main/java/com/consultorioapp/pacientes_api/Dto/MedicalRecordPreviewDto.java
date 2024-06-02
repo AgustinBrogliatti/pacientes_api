@@ -9,11 +9,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MedicalRecordInfoDto {
+public class MedicalRecordPreviewDto {
     private Long id;
-    private String doctorId;
+    private Long patientDni;
+    private String patientLastname;
+    private String patientName;
     private String healthInsurances;
-    private String previousHistory;
-    private String allergies;
-    private String medicines;
+    private String patientPhoneNumber;
+    private String doctorName;
 }

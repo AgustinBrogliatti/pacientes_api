@@ -1,5 +1,7 @@
 package com.consultorioapp.pacientes_api.services;
 
+import com.consultorioapp.pacientes_api.Dto.DoctorDto;
+import com.consultorioapp.pacientes_api.Dto.SecretaryDto;
 import com.consultorioapp.pacientes_api.model.*;
 import com.consultorioapp.pacientes_api.repositories.RoomRepository;
 import com.consultorioapp.pacientes_api.repositories.UserRepository;
@@ -19,24 +21,42 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private UserRepository userRepository;
 
+    private DoctorDto convertToDoctorDto(Doctor doctor) {
+        DoctorDto doctorDto = new DoctorDto();
+        doctorDto.setId(doctor.getId());
+        doctorDto.setName(doctor.getName());
+        doctorDto.setLastname(doctor.getLastname());
+        doctorDto.setRoomId(doctor.getRoom().getId());
+        doctorDto.setRoomName(doctor.getRoom().getName());
+        return doctorDto;
+    }
+
+    private SecretaryDto convertotoSecDto(Secretary secretary) {
+        SecretaryDto secretaryDto = new SecretaryDto();
+        secretaryDto.setId(secretary.getId());
+        secretaryDto.setName(secretary.getName());
+        secretaryDto.setLastname(secretary.getLastname());
+        return secretaryDto;
+    }
+
     @Override
     @Transactional
-    public Doctor createDoctor(Doctor doctor, Long roomId) {
+    public DoctorDto createDoctor(Doctor doctor, Long roomId) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("La sala con ID " + roomId + " no existe"));
         doctor.setRoom(room);
-        return userRepository.save(doctor);
+        return convertToDoctorDto(userRepository.save(doctor));
     }
 
     @Override
     @Transactional
-    public Secretary createSecretary(Secretary secretary) {
-        return userRepository.save(secretary);
+    public SecretaryDto createSecretary(Secretary secretary) {
+        return convertotoSecDto(userRepository.save(secretary));
     }
 
     @Override
     @Transactional
-    public Doctor updateDoctorRoom(Long doctorId, Long newRoomId) {
+    public DoctorDto updateDoctorRoom(Long doctorId, Long newRoomId) {
         try {
             Optional<User> doctorOptional = userRepository.findById(doctorId);
             Optional<Room> roomOptional = roomRepository.findById(newRoomId);
@@ -44,7 +64,7 @@ public class UserServiceImpl implements IUserService {
             Doctor doctor = (Doctor) doctorOptional.get();
             Room room = roomOptional.get();
             doctor.setRoom(room);
-            return userRepository.save(doctor);
+            return convertToDoctorDto(userRepository.save(doctor));
         } catch (Exception e) {
             throw e;
         }
