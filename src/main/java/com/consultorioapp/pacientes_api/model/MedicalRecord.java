@@ -33,7 +33,8 @@ public class MedicalRecord {
     @Column(name = "previous_history", length = 2000)
     private String previousHistory;
 
-    @OneToMany(mappedBy = "medicalRecord", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JoinColumn(name = "record_id")
     private List<Comment> comments = new ArrayList<>();
 
     @Column(name = "allergies", length = 500)
@@ -41,11 +42,6 @@ public class MedicalRecord {
 
     @Column(name = "medicines", length = 500)
     private String medicines;
-
-    public MedicalRecord(Patient patient, Doctor doctor) {
-        this.patient = patient;
-        this.doctor = doctor;
-    }
 
     public void addComment(Comment comment) {
         comments.add(comment);

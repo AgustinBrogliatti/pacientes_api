@@ -3,10 +3,10 @@ package com.consultorioapp.pacientes_api.services;
 import com.consultorioapp.pacientes_api.Dto.MedicalRecordDetailsDto;
 import com.consultorioapp.pacientes_api.Dto.MedicalRecordPreviewDto;
 import com.consultorioapp.pacientes_api.Dto.MedicalRecordHealthDto;
+import com.consultorioapp.pacientes_api.model.Comment;
 import com.consultorioapp.pacientes_api.model.Doctor;
 import com.consultorioapp.pacientes_api.model.MedicalRecord;
 import com.consultorioapp.pacientes_api.model.Patient;
-import com.consultorioapp.pacientes_api.repositories.PatientRepository;
 import com.consultorioapp.pacientes_api.repositories.RecordRepository;
 import com.consultorioapp.pacientes_api.repositories.UserRepository;
 
@@ -23,9 +23,6 @@ public class RecordServiceImpl implements IRecordService {
 
     @Autowired
     private RecordRepository recordRepository;
-
-    @Autowired
-    private PatientRepository patientRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -53,8 +50,6 @@ public class RecordServiceImpl implements IRecordService {
         dto.setMedicines(medicalRecord.getMedicines());
         return dto;
     }
-
-
 
     @Override
     @Transactional
@@ -157,4 +152,18 @@ public class RecordServiceImpl implements IRecordService {
             return true;
         } catch(Exception e) {throw e;}
     }
+
+    @Override
+    @Transactional
+    public MedicalRecord addComment(Long medicalRecordId, Comment comment) {
+        try {
+            Optional<MedicalRecord> optionalMedicalRecord = recordRepository.findById(medicalRecordId);
+                MedicalRecord medicalRecord = optionalMedicalRecord.get();
+                medicalRecord.addComment(comment);
+                return recordRepository.save(medicalRecord);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
 }

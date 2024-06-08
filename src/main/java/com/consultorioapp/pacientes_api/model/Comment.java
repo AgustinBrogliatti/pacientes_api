@@ -25,7 +25,4 @@ public class Comment {
     @Column(name = "date", nullable = false)
     private Date date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "record_id", referencedColumnName = "id", nullable = false)
-    private MedicalRecord medicalRecord;
 }
