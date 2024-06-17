@@ -4,9 +4,11 @@ import com.consultorioapp.pacientes_api.Dto.MedicalRecordDetailsDto;
 import com.consultorioapp.pacientes_api.Dto.MedicalRecordPreviewDto;
 import com.consultorioapp.pacientes_api.Dto.MedicalRecordHealthDto;
 import com.consultorioapp.pacientes_api.configuration.ErrorResponse;
+import com.consultorioapp.pacientes_api.model.Comment;
 import com.consultorioapp.pacientes_api.model.MedicalRecord;
 import com.consultorioapp.pacientes_api.model.Patient;
 import com.consultorioapp.pacientes_api.services.IRecordService;
+import com.consultorioapp.pacientes_api.services.RecordServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +38,7 @@ public class RecordController {
         }
     }
 
-    @GetMapping("")
+    @GetMapping(value = "")
     public ResponseEntity<?> getRecords() {
         try {
             List<MedicalRecordPreviewDto> records = recordService.getRecords();
@@ -48,7 +50,7 @@ public class RecordController {
     }
 
     // GET ../api/medical-record/dni?dni
-    @GetMapping("/dni")
+    @GetMapping(value = "/dni")
     public ResponseEntity<?> getRecordsByDni(@RequestParam String dni) {
         try {
             List<MedicalRecordPreviewDto> records = recordService.getRecordsByDni(dni);
@@ -59,7 +61,7 @@ public class RecordController {
         }
     }
 
-    @GetMapping("/lastname")
+    @GetMapping(value = "/lastname")
     public ResponseEntity<?> getRecordsByLastName(@RequestParam String lastname) {
         try {
             List<MedicalRecordPreviewDto> records = recordService.getRecordsByLastName(lastname);
@@ -70,7 +72,7 @@ public class RecordController {
         }
     }
 
-    @GetMapping("/fullname")
+    @GetMapping(value = "/fullname")
     public ResponseEntity<?> getRecordsByFullName(@RequestParam String fullName) {
         try {
             List<MedicalRecordPreviewDto> records = recordService.getRecordsByFullName(fullName);
@@ -81,7 +83,7 @@ public class RecordController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<?> getRecordDetails(@PathVariable Long id) {
         try {
             MedicalRecordDetailsDto recordDetails = recordService.getRecordDetails(id);
@@ -92,7 +94,7 @@ public class RecordController {
         }
     }
 
-    @PutMapping("/{id}/patient")
+    @PutMapping(value = "/{id}/patient")
     public ResponseEntity<?> updatePatient(@PathVariable Long id, @RequestBody Patient patient) {
         try {
             Patient patientUpdated = recordService.updatePatient(id, patient);
@@ -103,7 +105,7 @@ public class RecordController {
         }
     }
 
-    @PutMapping("/")
+    @PutMapping(value = "/")
     public ResponseEntity<?> updateInfo(@RequestBody MedicalRecordHealthDto newRecordData) {
         try {
             MedicalRecordDetailsDto recordUpdated = recordService.updateRecordInfo(newRecordData);
@@ -114,14 +116,26 @@ public class RecordController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteRecord(@PathVariable Long id) {
         try {
-            recordService.deleteRecordById(id);
+            boolean isDeleted = recordService.deleteRecordById(id);
             Map<String, Object> response = new HashMap<>();
             response.put("id", id);
             response.put("message", "Deleted successfully");
-            response.put("deleted", true);
+            response.put("deleted", isDeleted);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    @PostMapping(value = "/{recordId}/comments")
+    public ResponseEntity<?> addComment(@PathVariable Long recordId, @RequestBody Comment comment) {
+        try {
+            MedicalRecord response = recordService.addComment(recordId, comment);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());

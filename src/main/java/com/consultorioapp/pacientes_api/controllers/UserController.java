@@ -79,12 +79,13 @@ public class UserController {
     @DeleteMapping(value = "/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
         try {
-            userService.deleteUser(userId);
+            boolean isDeleted = userService.deleteUser(userId);
             Map<String, Object> response = new HashMap<>();
             response.put("user_id", userId);
             response.put("message", "Deleted successfully");
             response.put("deleted", true);
             return ResponseEntity.ok(response);
+
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND.getReasonPhrase(), e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
