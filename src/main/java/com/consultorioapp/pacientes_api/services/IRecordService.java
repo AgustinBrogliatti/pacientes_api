@@ -18,7 +18,4 @@ public interface IRecordService {
     Patient updatePatient(Long recordId, Patient patient);
     MedicalRecordDetailsDto updateRecordInfo(MedicalRecordHealthDto newRecordData);
     boolean deleteRecordById(Long recordId);
-//    void addComment(MedicalRecord medicalRecord, String comment);
-//    void deleteComment(MedicalRecord medicalRecord, String comment);
-//    void updateComment(MedicalRecord medicalRecord, String comment);
 }

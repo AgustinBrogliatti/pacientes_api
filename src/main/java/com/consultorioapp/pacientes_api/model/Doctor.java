@@ -21,11 +21,7 @@ public class Doctor extends User {
         super(name, lastname, username, password);
     }
 
-    public void addCommentToMedicalRecord(MedicalRecord medicalRecord, Comment comment) {
-        medicalRecord.addComment(comment);
-    }
-
-    public void removeCommentFromMedicalRecord(MedicalRecord medicalRecord, Comment comment) {
-        medicalRecord.removeComment(comment);
+    public String getFullName() {
+        return this.getName() + " " + this.getLastname();
     }
 }

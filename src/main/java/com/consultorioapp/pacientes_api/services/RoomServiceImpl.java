@@ -37,6 +37,8 @@ public class RoomServiceImpl implements IRoomService{
         }
     }
 
+    @Override
+    @Transactional
     public boolean deleteRoomById(Long roomId) {
         try {
             Optional<Room> roomOptional = roomRepository.findById(roomId);

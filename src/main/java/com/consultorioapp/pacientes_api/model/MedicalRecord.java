@@ -33,9 +33,6 @@ public class MedicalRecord {
     @Column(name = "previous_history", length = 2000)
     private String previousHistory;
 
-    @OneToMany(mappedBy = "medicalRecord", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
-
     @Column(name = "allergies", length = 500)
     private String allergies;
 
@@ -45,14 +42,6 @@ public class MedicalRecord {
     public MedicalRecord(Patient patient, Doctor doctor) {
         this.patient = patient;
         this.doctor = doctor;
-    }
-
-    public void addComment(Comment comment) {
-        comments.add(comment);
-    }
-
-    public void removeComment(Comment comment) {
-        comments.remove(comment);
     }
 
     public void addAllergy(String allergy) {
