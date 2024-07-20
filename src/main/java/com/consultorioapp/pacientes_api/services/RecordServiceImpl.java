@@ -153,17 +153,4 @@ public class RecordServiceImpl implements IRecordService {
         } catch(Exception e) {throw e;}
     }
 
-    @Override
-    @Transactional
-    public MedicalRecord addComment(Long medicalRecordId, Comment comment) {
-        try {
-            Optional<MedicalRecord> optionalMedicalRecord = recordRepository.findById(medicalRecordId);
-                MedicalRecord medicalRecord = optionalMedicalRecord.get();
-                medicalRecord.addComment(comment);
-                return recordRepository.save(medicalRecord);
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
 }

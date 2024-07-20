@@ -1,6 +1,5 @@
 package com.consultorioapp.pacientes_api.configuration;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

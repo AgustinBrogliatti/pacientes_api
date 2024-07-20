@@ -132,15 +132,4 @@ public class RecordController {
         }
     }
 
-    @PostMapping(value = "/{recordId}/comments")
-    public ResponseEntity<?> addComment(@PathVariable Long recordId, @RequestBody Comment comment) {
-        try {
-            MedicalRecord response = recordService.addComment(recordId, comment);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
-    }
-
 }
