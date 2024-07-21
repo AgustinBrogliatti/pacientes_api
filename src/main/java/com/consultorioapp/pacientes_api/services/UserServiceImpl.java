@@ -2,10 +2,13 @@ package com.consultorioapp.pacientes_api.services;
 
 import com.consultorioapp.pacientes_api.Dto.DoctorDto;
 import com.consultorioapp.pacientes_api.Dto.SecretaryDto;
+import com.consultorioapp.pacientes_api.configuration.JwtUtilities;
 import com.consultorioapp.pacientes_api.model.*;
 import com.consultorioapp.pacientes_api.repositories.RoomRepository;
 import com.consultorioapp.pacientes_api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +23,13 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtilities jwtUtilities;
+
 
     private DoctorDto convertToDoctorDto(Doctor doctor) {
         DoctorDto doctorDto = new DoctorDto();
@@ -100,5 +110,25 @@ public class UserServiceImpl implements IUserService {
         } catch (Exception e) {
             throw  e;
         }
+    }
+
+    @Override
+    public String authenticate(String username, String password) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) { return null; }
+        // Generar el token a retornar
+        String token = jwtUtilities.generateToken(user.getUsername(), user.getId(), user.getRole());
+        return token;
+
+        // ACLARACION: Solo estoy retornando el JWT, el usuario no esta actualmente autenticado
+        // por lo que si voy a realizar otra tarea debo generar el objeto correspondiente y
+        // agregarlo al contexto de Spring
+
+    }
+
+    @Override
+    public User getUserInfo() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByUsername(username).orElse(null);
     }
 }

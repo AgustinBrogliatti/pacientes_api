@@ -13,4 +13,6 @@ public interface IUserService {
     DoctorDto updateDoctorRoom(Long doctorId, Long roomId);
     boolean updateUserAccess(String username, String password, String newPassword);
     boolean deleteUser(Long userId);
+    String authenticate(String username, String password);
+    User getUserInfo();
 }
