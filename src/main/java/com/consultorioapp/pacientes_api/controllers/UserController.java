@@ -91,5 +91,13 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
         }
     }
+
+    /**
+     * Endpoint para obtener la información del usuario logueado mediante jwt
+     */
+    @GetMapping(value = "/info")
+    public User getUserInfo() {
+        return userService.getUserInfo();
+    }
 }
 

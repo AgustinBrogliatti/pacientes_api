@@ -16,7 +16,7 @@ import java.util.Date;
 public class JwtUtilities {
 
     private final String secret = "5b44b0b00fd822d1ce753e54dac3dc4e06c2725f7db930f3b9924368b53194dbccdbe23d7baa5ef5fbc414ca4b2e67700bad60c5a7c45eaba16880985582fba4";
-    private final Long expiration = 3600l;
+    private final Long expiration = (3600l * 24) * 7; //1 semana
 
     public String generateToken(String username, Long id, String rol) {
         return Jwts.builder()

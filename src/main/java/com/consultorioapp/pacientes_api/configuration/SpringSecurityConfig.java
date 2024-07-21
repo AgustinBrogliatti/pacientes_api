@@ -29,7 +29,14 @@ public class SpringSecurityConfig {
                 .csrf((csrf) -> csrf.disable()) // Deshabilitar la protección CSRF (Cross-Site Request Forgery), ya que no estamos usando sesiones en el front
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll() // Permitir a todos los usuarios loguearse
+                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll() // Permitir a todos ver la doc
+                        .requestMatchers(HttpMethod.GET, "/api-docs/**").permitAll() // Permitir a todos ver la doc
+                        .requestMatchers("/api/user/**").hasAuthority("ADMIN") // Permitir manejar usuarios a secretaria
+                        .requestMatchers("/api/user/**").permitAll() // Permitir manejar usuarios a secretaria
+                        .requestMatchers(HttpMethod.POST,"/api/user/doctor").hasAuthority("DOC") // Permitir editar accesos propios al doc
                         .requestMatchers(HttpMethod.DELETE, "api/room/**").hasAuthority("ADMIN") // Solo los admin pueden eliminar room
+                        .requestMatchers(HttpMethod.POST, "api/room/**").hasAuthority("ADMIN") // Solo los admin pueden crear room
+                        .requestMatchers(HttpMethod.DELETE, "api/medical-record/**").hasAuthority("DOC") // Solo los doc pueden eliminar registro medico
                         .requestMatchers("/api/medical-record/comments/**").hasAuthority("DOC") // Solo los doc pueden acceder a la historia clinica
                         .anyRequest().authenticated() // Cualquier otra solicitud debe ser autenticada
                 )
