@@ -2,8 +2,6 @@ package com.consultorioapp.pacientes_api.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.*;
 
@@ -16,9 +14,6 @@ public class Secretary extends User {
     public Secretary(String name, String lastname, String username, String password) {
         super(name, lastname, username, password);
     }
-
-    @ElementCollection
-    private List<String> roles = new ArrayList<>();
 
     public void createAppointment(Calendar calendar, Doctor doctor, Patient patient, Date date) {
         Appointment newAppointment = new Appointment(date, doctor, patient);
@@ -53,12 +48,5 @@ public class Secretary extends User {
         medicalRecord.setMedicines(medicines);
         medicalRecord.setPreviousHistory(previousHistory);
         return medicalRecord;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ADMIN"));
-        return authorities;
     }
 }

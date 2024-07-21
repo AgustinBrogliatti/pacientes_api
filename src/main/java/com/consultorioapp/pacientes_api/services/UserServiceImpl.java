@@ -55,12 +55,14 @@ public class UserServiceImpl implements IUserService {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new IllegalArgumentException("La sala con ID " + roomId + " no existe"));
         doctor.setRoom(room);
+        doctor.setPassword(passwordEncoder.encode(doctor.getPassword()));
         return convertToDoctorDto(userRepository.save(doctor));
     }
 
     @Override
     @Transactional
     public SecretaryDto createSecretary(Secretary secretary) {
+        secretary.setPassword(passwordEncoder.encode(secretary.getPassword()));
         return convertotoSecDto(userRepository.save(secretary));
     }
 

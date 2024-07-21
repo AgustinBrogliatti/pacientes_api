@@ -31,13 +31,8 @@ public class SpringSecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll() // Permitir a todos los usuarios loguearse
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll() // Permitir a todos ver la doc
                         .requestMatchers(HttpMethod.GET, "/api-docs/**").permitAll() // Permitir a todos ver la doc
-                        .requestMatchers("/api/user/**").hasAuthority("ADMIN") // Permitir manejar usuarios a secretaria
-                        .requestMatchers("/api/user/**").permitAll() // Permitir manejar usuarios a secretaria
-                        .requestMatchers(HttpMethod.POST,"/api/user/doctor").hasAuthority("DOC") // Permitir editar accesos propios al doc
-                        .requestMatchers(HttpMethod.DELETE, "api/room/**").hasAuthority("ADMIN") // Solo los admin pueden eliminar room
-                        .requestMatchers(HttpMethod.POST, "api/room/**").hasAuthority("ADMIN") // Solo los admin pueden crear room
-                        .requestMatchers(HttpMethod.DELETE, "api/medical-record/**").hasAuthority("DOC") // Solo los doc pueden eliminar registro medico
                         .requestMatchers("/api/medical-record/comments/**").hasAuthority("DOC") // Solo los doc pueden acceder a la historia clinica
+                        .requestMatchers("/**").hasAuthority("SUPERUSER") // Superusuario tiene acceso a todo
                         .anyRequest().authenticated() // Cualquier otra solicitud debe ser autenticada
                 )
                 .httpBasic(Customizer.withDefaults()) // Usar autenticación HTTP básica
