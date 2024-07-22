@@ -1,70 +1,69 @@
-package com.consultorioapp.pacientes_api.configuration;
+    package com.consultorioapp.pacientes_api.configuration;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+    import io.jsonwebtoken.Claims;
+    import io.jsonwebtoken.Jws;
+    import io.jsonwebtoken.Jwts;
+    import io.jsonwebtoken.SignatureAlgorithm;
+    import jakarta.servlet.http.HttpServletRequest;
+    import org.springframework.stereotype.Component;
+    import org.springframework.util.StringUtils;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
+    import java.time.Instant;
+    import java.time.temporal.ChronoUnit;
+    import java.util.Date;
 
-@Component
-public class JwtUtilities {
+    @Component
+    public class JwtUtilities {
 
-    private final String secret = "5b44b0b00fd822d1ce753e54dac3dc4e06c2725f7db930f3b9924368b53194dbccdbe23d7baa5ef5fbc414ca4b2e67700bad60c5a7c45eaba16880985582fba4";
-    private final Long expiration = (3600l * 24) * 7; //1 semana
+        private final String secret = "5b44b0b00fd822d1ce753e54dac3dc4e06c2725f7db930f3b9924368b53194dbccdbe23d7baa5ef5fbc414ca4b2e67700bad60c5a7c45eaba16880985582fba4";
+        private final Long expiration = (3600l * 24) * 7; //1 semana
 
-    public String generateToken(String username, Long id, String rol) {
-        return Jwts.builder()
-                .setSubject(username) // Establece el subject
-                .claim("id", id) //Establece las Claims: información del usuario en el token.
-                .setIssuedAt(new Date(System.currentTimeMillis())) //Fecha de emisión del token.
-                .setExpiration(Date.from(Instant.now().plus(expiration, ChronoUnit.SECONDS))) //Fecha de expiracion del token.
-                .signWith(SignatureAlgorithm.HS256, secret) //Firma el token.
-                .compact(); //Crea una cadena JWT con la configuración establecida.
-    }
-
-    public String getToken(HttpServletRequest httpServletRequest) {
-        String barrerToken = httpServletRequest.getHeader("Authorization"); //Obtiene el contenido del Authorization Header
-        if(StringUtils.hasText(barrerToken) && barrerToken.startsWith("Bearer ")) { // Verifica que sea un token JWT
-            return barrerToken.substring(7, barrerToken.length()); //Obtiene la cadena del token.
+        public String generateToken(String username, Long id, String rol) {
+            return Jwts.builder()
+                    .setSubject(username) // Establece el subject
+                    .claim("id", id) //Establece las Claims: información del usuario en el token.
+                    .setIssuedAt(new Date(System.currentTimeMillis())) //Fecha de emisión del token.
+                    .setExpiration(Date.from(Instant.now().plus(expiration, ChronoUnit.SECONDS))) //Fecha de expiracion del token.
+                    .signWith(SignatureAlgorithm.HS256, secret) //Firma el token.
+                    .compact(); //Crea una cadena JWT con la configuración establecida.
         }
-        return null;
-    }
 
-    public boolean validateToken(String token) {
-        try {
-            // Si puedo obtener las claims entonces el token es valido
-            Jws<Claims> claimsJws =  Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-            if(isTokenExpired(token)) { return false; } // Verfica que no haya expirado.
-            return true;
-        } catch (Exception e) {
-            // Si el token no es valido, puedo realizar alguna acción
+        public String getToken(HttpServletRequest httpServletRequest) {
+            String barrerToken = httpServletRequest.getHeader("Authorization"); //Obtiene el contenido del Authorization Header
+            if(StringUtils.hasText(barrerToken) && barrerToken.startsWith("Bearer ")) { // Verifica que sea un token JWT
+                return barrerToken.substring(7, barrerToken.length()); //Obtiene la cadena del token.
+            }
+            return null;
         }
-        return false;
-    }
 
-    public Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-    }
+        public boolean isValidToken(String token) {
+            try {
+                // Si puedo obtener las claims entonces el token es valido
+                Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+                return !isTokenExpired(token);
+            } catch (Exception e) {
+                // Si el token no es valido, puedo realizar alguna acción
+            }
+            return false;
+        }
 
-    public String extractUsername(String token) {
-        return extractAllClaims(token).getSubject();
-    }
+        public Claims extractAllClaims(String token) {
+            return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        }
 
-    public Long extractId(String token) {
-        return Long.parseLong((String) extractAllClaims(token).get("id"));
-    }
+        public String extractUsername(String token) {
+            return extractAllClaims(token).getSubject();
+        }
 
-    public Date extractExpiration(String token) {
-        return extractAllClaims(token).getExpiration();
-    }
+        public Long extractId(String token) {
+            return Long.parseLong((String) extractAllClaims(token).get("id"));
+        }
 
-    public Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        public Date extractExpiration(String token) {
+            return extractAllClaims(token).getExpiration();
+        }
+
+        public Boolean isTokenExpired(String token) {
+            return extractExpiration(token).before(new Date());
+        }
     }
-}
