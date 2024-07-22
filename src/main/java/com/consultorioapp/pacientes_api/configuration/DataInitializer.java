@@ -18,18 +18,19 @@ public class DataInitializer implements CommandLineRunner {
     private PasswordEncoder passwordEncoder;
 
     //inyectamos el valor desde app.properties
-    private String superuserPassword = "UCEMA2024";
+    @Value("${superuser.password}")
+    private String superuserPassword;
 
     @Override
     public void run(String... args) throws Exception {
-        if (!userRepository.existsByUsername("superuser")) {
-            God superuser = new God();
-            superuser.setName("Super");
-            superuser.setLastname("User");
-            superuser.setUsername("agus-dev");
-            superuser.setPassword(passwordEncoder.encode(superuserPassword));
-
-            userRepository.save(superuser);
-        }
+//        if (!userRepository.existsByUsername("superuser")) {
+//            God superuser = new God();
+//            superuser.setName("Super");
+//            superuser.setLastname("User");
+//            superuser.setUsername("agus-dev");
+//            superuser.setPassword(passwordEncoder.encode(superuserPassword));
+//
+//            userRepository.save(superuser);
+//        }
     }
 }

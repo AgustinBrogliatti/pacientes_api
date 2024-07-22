@@ -35,7 +35,9 @@ public class Room {
     }
 
     public void assignPatient(Patient patient) {
-        this.patients.add(patient);
+        if (!this.patients.contains(patient)) {
+            this.patients.add(patient);
+        }
     }
 
     public void removePatient(Patient patient) {
